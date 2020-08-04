@@ -1,0 +1,16 @@
+{
+  "cinemaName": "Multikino",
+  "cityName": "Zabrze",
+  "cinemaRooms": [
+    {
+      "name": "One",
+      "rows": 10,
+      "seats": 20
+    },
+    {
+      "name": "Two",
+      "rows": 12,
+      "seats": 18
+    }
+  ]
+}

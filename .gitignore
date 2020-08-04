@@ -1,0 +1,11 @@
+.idea
+out/
+.idea/
+.idea_modules/
+*.iml
+*.ipr
+*.iws
+# Project exclude paths
+/persistence/target/
+/repository/target/
+/service/target/
