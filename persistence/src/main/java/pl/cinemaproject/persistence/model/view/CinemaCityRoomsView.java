@@ -1,9 +1,12 @@
-package pl.cinemaproject.persistence.model;
+package pl.cinemaproject.persistence.model.view;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.cinemaproject.persistence.model.Cinema;
+import pl.cinemaproject.persistence.model.CinemaRoom;
+import pl.cinemaproject.persistence.model.City;
 
 import java.util.List;
 
@@ -12,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Builder
-public class CinemaComplex {
+public class CinemaCityRoomsView {
 
     private Cinema cinema;
     private City city;

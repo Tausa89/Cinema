@@ -8,7 +8,7 @@ public class HelperMethods {
 
     public static Seat[][] generateSeats(CinemaRoom cinemaRoom){
 
-        Seat[][] room = new Seat[cinemaRoom.getRows()][cinemaRoom.getSeats()];
+        Seat[][] room = new Seat[cinemaRoom.getRowsNumber()][cinemaRoom.getPlaces()];
 
 //        Seat [][] rooms = Arrays
 //                .stream(room)
@@ -25,7 +25,7 @@ public class HelperMethods {
             for (int j = 0; j < room[i].length; j++) {
                 room[i][j] = Seat
                         .builder()
-                        .row(i)
+                        .rowAmount(i)
                         .place(j)
                         .build();
             }

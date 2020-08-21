@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class Seat {
 
     private Integer id;
-    private int row;
+    private int rowAmount;
     private int place;
     private Integer cinemaRoomId;
 

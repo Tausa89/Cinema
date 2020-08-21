@@ -1,7 +1,7 @@
 package pl.cinemaproject.persistence.mapper;
 
 import pl.cinemaproject.persistence.model.Cinema;
-import pl.cinemaproject.persistence.model.CinemaComplex;
+import pl.cinemaproject.persistence.model.view.CinemaCityRoomsView;
 import pl.cinemaproject.persistence.model.CinemaRoom;
 import pl.cinemaproject.persistence.model.City;
 import pl.cinemaproject.persistence.modeldto.CinemaComplexDTO;
@@ -13,9 +13,9 @@ public class Mappers {
 
 
 
-    public static CinemaComplex fromDtoToCinemaComplex(CinemaComplexDTO cinemaComplexDTO){
+    public static CinemaCityRoomsView fromDtoToCinemaComplex(CinemaComplexDTO cinemaComplexDTO){
 
-        return CinemaComplex
+        return CinemaCityRoomsView
                 .builder()
                 .cinema(Cinema
                         .builder()
@@ -36,8 +36,8 @@ public class Mappers {
         return cinemaComplexDTO.getCinemaRooms().stream().map(p -> CinemaRoom
                 .builder()
                 .name(p.getName())
-                .rows(p.getRows())
-                .seats(p.getSeats())
+                .rowsNumber(p.getRows())
+                .places(p.getSeats())
                 .build())
                 .collect(Collectors.toList());
 

@@ -12,8 +12,8 @@ class HelperMethodsTest {
 
         var cinemaRoom = CinemaRoom
                 .builder()
-                .rows(10)
-                .seats(10)
+                .rowsNumber(10)
+                .places(10)
                 .name("One")
                 .build();
 

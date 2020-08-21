@@ -4,13 +4,13 @@
   "cinemaRooms": [
     {
       "name": "One",
-      "rows": 10,
-      "seats": 20
+      "rows": 3,
+      "seats": 3
     },
     {
       "name": "Two",
-      "rows": 12,
-      "seats": 18
+      "rows": 2,
+      "seats": 2
     }
   ]
 }

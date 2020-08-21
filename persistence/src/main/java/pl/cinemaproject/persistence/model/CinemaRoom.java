@@ -14,7 +14,7 @@ public class CinemaRoom {
 
     private Integer id;
     private String name;
-    private int rows;
-    private int seats;
+    private int rowsNumber;
+    private int places;
     private Integer cinemaId;
 }

@@ -1,7 +1,6 @@
 package pl.cinemaproject.persistence.mapper;
 
 import org.junit.jupiter.api.Test;
-import pl.cinemaproject.persistence.model.CinemaComplex;
 import pl.cinemaproject.persistence.modeldto.CinemaComplexDTO;
 import pl.cinemaproject.persistence.modeldto.CinemaRoomDTO;
 

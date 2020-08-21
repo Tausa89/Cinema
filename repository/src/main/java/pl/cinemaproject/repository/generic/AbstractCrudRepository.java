@@ -89,9 +89,9 @@ public abstract class AbstractCrudRepository<T, ID> implements CrudRepository<T,
         var sql = SELECT + tableName + " order by id desc limit " + limit;
 
         return jdbi.withHandle(handle -> handle
-                .createQuery(sql))
+                .createQuery(sql)
                 .mapToBean(entityType)
-                .list();
+                .list());
 
     }
 
@@ -114,9 +114,9 @@ public abstract class AbstractCrudRepository<T, ID> implements CrudRepository<T,
                 .collect(Collectors.joining(", "));
         var sql = SELECT + tableName + "where id in (" + idsAsString + ");";
         return jdbi.withHandle(handle -> handle
-                .createQuery(sql))
+                .createQuery(sql)
                 .mapToBean(entityType)
-                .list();
+                .list());
     }
 
     @Override
@@ -184,7 +184,7 @@ public abstract class AbstractCrudRepository<T, ID> implements CrudRepository<T,
 
     private String getColumnValuesForInsertMany(List<T> item) {
 
-        return "(" + item
+        return item
                 .stream()
                 .map(this::getColumnValuesForInsert)
                 .collect(Collectors.joining(", "));
