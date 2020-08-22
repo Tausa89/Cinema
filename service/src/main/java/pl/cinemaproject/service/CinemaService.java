@@ -47,6 +47,8 @@ public class CinemaService {
 
         var seats = generateSeats(cinemaRoomsWithIds);
 
+        System.out.println(seats);
+
         var insertedSeats = addSeats(seats);
         System.out.println("Seats created. Number of created seats: " + insertedSeats);
 
@@ -77,7 +79,6 @@ public class CinemaService {
                 .map(Cinema::getId)
                 .orElseThrow(() -> new IllegalStateException("....."));
     }
-
 
     private List<CinemaRoom> addCinemaRooms(List<CinemaRoom> cinemaRooms) {
 
@@ -129,6 +130,7 @@ public class CinemaService {
 
         return addCity(cinemaView.getCity());
     }
+
 
 
 }
