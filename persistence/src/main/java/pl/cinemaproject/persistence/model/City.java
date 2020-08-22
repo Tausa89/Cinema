@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class City {
+public class  City {
 
     private Integer id;
     private String name;
