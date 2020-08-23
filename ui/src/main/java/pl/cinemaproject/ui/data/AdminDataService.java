@@ -28,5 +28,13 @@ public final class AdminDataService {
     }
 
 
+    public static String getString(String message){
+
+        System.out.println(message);
+
+        return scanner.nextLine();
+    }
+
+
 
 }
