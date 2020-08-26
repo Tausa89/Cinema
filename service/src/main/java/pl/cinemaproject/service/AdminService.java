@@ -61,13 +61,42 @@ public class AdminService {
         return cinemaRepository.add(cinema).orElseThrow().getName();
     }
 
-    public int findCinemaByName(){
+    public int findCinemaIdByName(String cinemaName){
 
+        if(cinemaRepository.findByName(cinemaName).isEmpty()){
+            throw new NullPointerException("City " + cinemaName + " dose not exist");
+        }
+
+        return cinemaRepository.findByName(cinemaName).map(Cinema::getId).orElseThrow();
     }
 
 
     public String addNewCinemaRoom(CinemaRoom cinemaRoom){
 
-        if ()
+        if (cinemaRoomRepository.findByName(cinemaRoom.getName()).isPresent()){
+            throw new NullPointerException("City " + cinemaRoom + " dose not exist");
+        }
+
+        return cinemaRoomRepository.add(cinemaRoom).orElseThrow().getName();
     }
+
+
+    public String updateCity(City city){
+
+//        var cityToUpdate = cityRepository.findByName(cityName).orElseThrow();
+//        cityToUpdate.setName("New");
+        cityRepository.update(city,city.getId());
+
+        return "xxxx";
+
+
+    }
+
+    public String removeCity(String name){
+
+        var cityToRemove = findCityIdByName(name);
+        return "Successfully remove " + cityRepository.deleteById(cityToRemove).orElseThrow().getName();
+    }
+
+
 }

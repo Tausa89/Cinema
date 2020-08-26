@@ -2,6 +2,8 @@ package pl.cinemaproject.ui.menu;
 
 import lombok.RequiredArgsConstructor;
 import pl.cinemaproject.persistence.model.Cinema;
+import pl.cinemaproject.persistence.model.CinemaRoom;
+import pl.cinemaproject.persistence.model.City;
 import pl.cinemaproject.service.AdminService;
 import pl.cinemaproject.ui.data.AdminDataService;
 
@@ -11,18 +13,16 @@ public class AdminMenuService {
 
     private final AdminService adminService;
 
-
-    public void adminMainMenu() {
-
+    public void getAdminMainMenu() {
 
         while (true) {
             try {
 
-                var option = choseOption();
+                var option = adminMainMenu();
                 switch (option) {
-                    case 1 -> addNewDataMenu();
-                    case 2 -> optionTwo();
-                    case 3 -> optionThree();
+                    case 1 -> getAddNewDataMenu();
+                    case 2 -> getUpdateDataMenu();
+                    case 3 -> getRemoveDataMenu();
                     case 4 -> {
                         System.out.println("Have a good day");
                         return;
@@ -30,7 +30,6 @@ public class AdminMenuService {
                     default -> System.out.println("Wrong input");
 
                 }
-
 
             } catch (Exception e) {
                 System.out.println("Exception");
@@ -40,19 +39,17 @@ public class AdminMenuService {
 
     }
 
-
-    private void addNewDataMenu() {
-
+    private void getAddNewDataMenu() {
 
         while (true) {
             try {
 
-                var option = optionOne();
+                var option = addNewDataMenu();
                 switch (option) {
                     case 1 -> addNewCity();
-                    case 2 -> addNewCinemaMenu();
+                    case 2 -> getAddNewCinemaMenu();
                     case 3 -> addNewCinemaRoom();
-                    case 4 -> adminMainMenu();
+                    case 4 -> getAdminMainMenu();
                     case 5 -> {
                         System.out.println("Have a good day");
                         return;
@@ -67,23 +64,24 @@ public class AdminMenuService {
 
     }
 
-    private void addNewCinemaRoom() {
+    private void addNewCity() {
 
-        System.out.println("To which cinema you want to add new cinema room");
-
+        var cityName = AdminDataService.getString("Pleas provide city name");
+        var addedCity = adminService.addNewCity(cityName);
+        System.out.println(addedCity + " was successfully added to database");
     }
 
-    private void addNewCinemaMenu() {
+    private void getAddNewCinemaMenu() {
 
         while (true) {
             try {
 
-                var option = addNewCinemaMenuInfo();
+                var option = addNewCinemaMenu();
                 switch (option) {
                     case 1 -> addNewCinemaToExistingCity();
                     case 2 -> addNewCinemaWithNewCity();
                     case 3 -> {
-                        addNewDataMenu();
+                        getAddNewDataMenu();
                         return;
                     }
                     default -> System.out.println("Wrong input");
@@ -104,7 +102,7 @@ public class AdminMenuService {
         addNewCinemaToExistingCity();
     }
 
-    private void addNewCinemaToExistingCity(){
+    private void addNewCinemaToExistingCity() {
 
         var cityName = AdminDataService.getString("Pleas provide city name");
         var cityId = adminService.findCityIdByName(cityName);
@@ -118,8 +116,7 @@ public class AdminMenuService {
 
     }
 
-
-    private int addNewCinemaMenuInfo() {
+    private int addNewCinemaMenu() {
         System.out.println(
                 """
                         1. You want add cinema to existing city?
@@ -131,14 +128,91 @@ public class AdminMenuService {
         return AdminDataService.getInt("Chose option");
     }
 
-    private void addNewCity() {
+    private void addNewCinemaRoom() {
 
-        var cityName = AdminDataService.getString("Pleas provide city name");
-        var addedCity = adminService.addNewCity(cityName);
-        System.out.println(addedCity + " was successfully added to database");
+        System.out.println("""
+                You can add cinema room only to existing cinema,
+                to which cinema you want to add new cinema room
+                """);
+        var cinemaId = adminService.findCinemaIdByName(AdminDataService.getString("Provide cinema name"));
+        CinemaRoom newCinemaRoom = CinemaRoom
+                .builder()
+                .cinemaId(cinemaId)
+                .name(AdminDataService.getString("Provide cinema room name"))
+                .places(AdminDataService.getInt("Provide number of places"))
+                .rowsNumber(AdminDataService.getInt("Provide number of rows"))
+                .build();
+
+        System.out.println("Cinema room " + adminService.addNewCinemaRoom(newCinemaRoom) + " was successfully added");
+
+        //ToDo generate Seats
+
     }
 
-    private int optionThree() {
+    private void getUpdateDataMenu() {
+
+        while (true) {
+            var option = updateDataMenu();
+            switch (option) {
+                case 1 -> updateCity();
+//                case 2 -> updateCinema();
+//                case 3 -> updateCinemaRoom();
+//                case 4 -> updateCinemaRoomSeats();
+                case 5 -> {
+                    updateDataMenu();
+                    return;
+                }
+            }
+        }
+    }
+
+    private int updateDataMenu() {
+
+        System.out.println(
+                """
+                        1. Do you want update city?
+                        2. Do you want to update cinema?
+                        3. Do you want to update cinema room?
+                        4. Do you want to update cinema room seats?
+                        5. Return to previous menu;
+                        """);
+
+        return AdminDataService.getInt("Chose option");
+    }
+
+
+    private void updateCity() {
+
+
+        var cityToUpdate = AdminDataService.getString("Pleas provide name of existing city");
+        var city = adminService.findCityIdByName(cityToUpdate);
+        var updatedCity = City.builder().name("One").id(city).build();
+
+        adminService.updateCity(updatedCity);
+
+
+    }
+
+    private void getRemoveDataMenu() {
+
+
+        while (true) {
+            var option = removeDataMenu();
+            switch (option) {
+                case 1 -> removeCity();
+//                case 2 -> updateCinema();
+//                case 3 -> updateCinemaRoom();
+//                case 4 -> updateCinemaRoomSeats();
+                case 5 -> {
+                    updateDataMenu();
+                    return;
+                }
+            }
+        }
+    }
+
+
+    private int removeDataMenu() {
 
         System.out.println(
                 """
@@ -150,24 +224,20 @@ public class AdminMenuService {
         return AdminDataService.getInt("Chose option");
     }
 
-    private int optionTwo() {
+    private String removeCity(){
 
-        System.out.println(
-                """
-                        1. Do you want update city?
-                        2. Do you want to update cinema?
-                        3. Do you want to update cinema room?
-                        4. Do you want to update cinema room seats?
-                        """);
+        var cityToRemove = AdminDataService.getString("City name");
 
-        return AdminDataService.getInt("Chose option");
+        return adminService.removeCity(cityToRemove);
+
     }
 
-    private int optionOne() {
+
+    private int addNewDataMenu() {
 
         System.out.println(
                 """
-                        1. Do you want add new City?
+                        1. Do you want add new City ?
                         2. Do you want to add new cinema?
                         3. Do you want to add new cinema room?
                         4. Return to previous menu
@@ -176,7 +246,7 @@ public class AdminMenuService {
         return AdminDataService.getInt("Chose option");
     }
 
-    private int choseOption() {
+    private int adminMainMenu() {
 
         System.out.println(
                 """
