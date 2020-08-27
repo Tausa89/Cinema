@@ -8,7 +8,7 @@ import pl.cinemaproject.service.AdminService;
 import pl.cinemaproject.ui.data.AdminDataService;
 
 @RequiredArgsConstructor
-public class AdminMenuService {
+public class AdminMenu {
 
 
     private final AdminService adminService;
@@ -30,7 +30,6 @@ public class AdminMenuService {
                     default -> System.out.println("Wrong input");
 
                 }
-
             } catch (Exception e) {
                 System.out.println("Exception");
                 System.out.println(e.getMessage());
@@ -184,11 +183,15 @@ public class AdminMenuService {
     private void updateCity() {
 
 
+        adminService.getAllCitiesNames().forEach(System.out::println);
         var cityToUpdate = AdminDataService.getString("Pleas provide name of existing city");
         var city = adminService.findCityIdByName(cityToUpdate);
-        var updatedCity = City.builder().name("One").id(city).build();
+        var updatedCity = City
+                .builder()
+                .name(AdminDataService.getString("Provide new city name"))
+                .id(city).build();
 
-        adminService.updateCity(updatedCity);
+        System.out.println(adminService.updateCity(updatedCity));
 
 
     }

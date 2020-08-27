@@ -9,6 +9,9 @@ import pl.cinemaproject.repository.CinemaRoomRepository;
 import pl.cinemaproject.repository.CityRepository;
 import pl.cinemaproject.repository.SeatRepository;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @RequiredArgsConstructor
 public class AdminService {
@@ -96,6 +99,21 @@ public class AdminService {
 
         var cityToRemove = findCityIdByName(name);
         return "Successfully remove " + cityRepository.deleteById(cityToRemove).orElseThrow().getName();
+    }
+
+
+
+    //ToDo Zapytaj Krzyska czy tu powinnienem użyć strumini czy żeby zostawić zabawę
+    // bazie danych powinno już w sql pobierać tylko tabele z nazwami miast
+    public List<String> getAllCitiesNames(){
+
+        return
+                cityRepository
+                        .findAll()
+                        .stream()
+                        .map(City::getName)
+                        .collect(Collectors.toList());
+
     }
 
 

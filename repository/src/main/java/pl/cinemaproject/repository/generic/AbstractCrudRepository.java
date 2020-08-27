@@ -3,6 +3,7 @@ package pl.cinemaproject.repository.generic;
 import com.google.common.base.CaseFormat;
 import org.atteo.evo.inflector.English;
 import org.jdbi.v3.core.Jdbi;
+import pl.cinemaproject.persistence.model.City;
 import pl.cinemaproject.repository.exception.RepositoryException;
 
 import java.lang.reflect.ParameterizedType;
@@ -74,13 +75,19 @@ public abstract class AbstractCrudRepository<T, ID> implements CrudRepository<T,
     @Override
     public Optional<T> findById(ID id) {
 
-        var sql = SELECT + tableName + WHERE + id;
+//        var sql = SELECT + tableName + WHERE + id;
+//
+//        return jdbi.withHandle(handle -> handle
+//                .createQuery(sql)
+//                .mapToBean(entityType))
+//                .findFirst();
 
+        var sql = SELECT + tableName + WHERE + ":id";
         return jdbi.withHandle(handle -> handle
                 .createQuery(sql)
-                .mapToBean(entityType))
-                .findFirst();
-
+                .bind("id", id)
+                .mapToBean(entityType)
+                .findFirst());
     }
 
     @Override
@@ -123,7 +130,7 @@ public abstract class AbstractCrudRepository<T, ID> implements CrudRepository<T,
     public Optional<T> deleteById(ID id) {
 
         var item = findById(id);
-        var sql = "deleted from " + tableName + WHERE + id;
+        var sql = "delete from " + tableName + WHERE + id;
         var deletedRows = jdbi.withHandle(handle -> handle
                 .execute(sql));
         if(deletedRows > 0){
