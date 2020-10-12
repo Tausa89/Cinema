@@ -1,7 +1,6 @@
 package pl.cinemaproject.repository;
 
 import pl.cinemaproject.persistence.model.Cinema;
-import pl.cinemaproject.persistence.model.City;
 import pl.cinemaproject.repository.generic.CrudRepository;
 
 import java.util.Optional;

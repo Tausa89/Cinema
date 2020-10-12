@@ -31,7 +31,7 @@ public class AdminMenu {
 
                 }
             } catch (Exception e) {
-                System.out.println("Exception");
+               System.out.println("Exception");
                 System.out.println(e.getMessage());
             }
         }
@@ -154,9 +154,8 @@ public class AdminMenu {
             var option = updateDataMenu();
             switch (option) {
                 case 1 -> updateCity();
-//                case 2 -> updateCinema();
-//                case 3 -> updateCinemaRoom();
-//                case 4 -> updateCinemaRoomSeats();
+                case 2 -> updateCinema();
+                case 3 -> updateCinemaRoom();
                 case 5 -> {
                     updateDataMenu();
                     return;
@@ -189,9 +188,36 @@ public class AdminMenu {
         var updatedCity = City
                 .builder()
                 .name(AdminDataService.getString("Provide new city name"))
-                .id(city).build();
+                .id(city)
+                .build();
 
         System.out.println(adminService.updateCity(updatedCity));
+
+
+    }
+
+
+
+    private void updateCinema() {
+        adminService.getAllCinemasNames().forEach(System.out::println);
+        var cinemaToUpdate = adminService.getCinemaByName(AdminDataService.getString("Provide name of existing cinema"));
+
+        cinemaToUpdate.setName(AdminDataService.getString("Provide new cinema name"));
+
+        System.out.println(adminService.updateCinema(cinemaToUpdate));
+    }
+
+
+    private void updateCinemaRoom() {
+
+        adminService.getAllCinemasNames().forEach(System.out::println);
+        var cinemaId = adminService.getCinemaByName(AdminDataService.getString("For which cinema you want to update cinema room?")).getId();
+        adminService.getAllCinemaRoomsForOneCinema(cinemaId).forEach(System.out::println);
+        var cinemaRoomToUpdate = adminService.getCinemaRoomByName(AdminDataService.getString("Provide cinema room name"));
+
+        cinemaRoomToUpdate.setName(AdminDataService.getString("Provide new cinema room name"));
+        System.out.println(adminService.updateCinemaRoom(cinemaRoomToUpdate));
+
 
 
     }
@@ -203,11 +229,10 @@ public class AdminMenu {
             var option = removeDataMenu();
             switch (option) {
                 case 1 -> removeCity();
-//                case 2 -> updateCinema();
-//                case 3 -> updateCinemaRoom();
-//                case 4 -> updateCinemaRoomSeats();
-                case 5 -> {
-                    updateDataMenu();
+                case 2 -> removeCinema();
+                case 3 -> removeCinemaRoom();
+                case 4 -> {
+                    removeDataMenu();
                     return;
                 }
             }
@@ -222,16 +247,62 @@ public class AdminMenu {
                         1. Do you want to remove city?
                         2. Do you want to remove cinema?
                         3. Do you want to remove cinema room?
+                        4. Return to previous menu.
                         """);
 
         return AdminDataService.getInt("Chose option");
     }
 
-    private String removeCity(){
+    private void removeCity(){
 
-        var cityToRemove = AdminDataService.getString("City name");
+        adminService.getAllCitiesNames().forEach(System.out::println);
+        var cityToRemove = AdminDataService.getString("""
+                Before remove city you need to be aware 
+                that all connected data with this city like cinemas, cinema rooms etc
+                will also be deleted.
+                
+                Pleas provide name of city you want to remove. 
+                """);
+        System.out.println(adminService.removeCity(cityToRemove));
 
-        return adminService.removeCity(cityToRemove);
+    }
+
+
+    private void removeCinema(){
+
+        adminService.getAllCinemasNames().forEach(System.out::println);
+        var cinemaToRemove = AdminDataService.getString("""
+                Before remove the cinema you need to be aware 
+                that all connected data like cinema rooms and seats
+                will also be deleted.
+                
+                Pleas provide name of cinema you want to remove. 
+                """);
+
+        System.out.println(adminService.removeCinema(cinemaToRemove));
+    }
+
+    private void  removeCinemaRoom(){
+        adminService.getAllCinemasNames().forEach(System.out::println);
+        var cinemaName = AdminDataService.getString("""
+                Please provide the name of a cinema in 
+                which one you want to remove cinema room. 
+                """);
+
+        var cinemaId = adminService.findCinemaIdByName(cinemaName);
+        adminService.getAllCinemaRoomsForOneCinema(cinemaId).forEach(System.out::println);
+
+        var cinemaRoomToRemove = AdminDataService.getString("""
+                Before remove the cinema room you need to be aware 
+                that all connected data like cinema seats
+                will also be deleted.
+                
+                Pleas provide the name of a cinema room you want to remove. 
+                """);
+
+        System.out.println(adminService.removeCinemaRoom(cinemaRoomToRemove,cinemaName));
+
+
 
     }
 

@@ -73,6 +73,14 @@ public class AdminService {
         return cinemaRepository.findByName(cinemaName).map(Cinema::getId).orElseThrow();
     }
 
+    public int findCinemaRoomIdByName(String cinemaRoomName, String cinemaName){
+
+        var cinemaId = findCinemaIdByName(cinemaName);
+
+        return cinemaRoomRepository.findCinemaRoomByNameWithCinemaId(cinemaRoomName,cinemaId).orElseThrow().getId();
+
+    }
+
 
     public String addNewCinemaRoom(CinemaRoom cinemaRoom){
 
@@ -88,18 +96,39 @@ public class AdminService {
 
 //        var cityToUpdate = cityRepository.findByName(cityName).orElseThrow();
 //        cityToUpdate.setName("New");
-        cityRepository.update(city,city.getId());
-
-        return "xxxx";
+        return cityRepository.update(city,city.getId()).orElseThrow().getName();
 
 
     }
 
-    public String removeCity(String name){
+    public String updateCinema(Cinema cinema){
 
-        var cityToRemove = findCityIdByName(name);
+
+        return "New cinema name " + cinemaRepository.update(cinema, cinema.getId()).orElseThrow().getName();
+
+
+    }
+
+    public String removeCity(String cityName){
+
+        var cityToRemove = findCityIdByName(cityName);
         return "Successfully remove " + cityRepository.deleteById(cityToRemove).orElseThrow().getName();
     }
+
+
+    public String removeCinema(String cinemaName) {
+
+        var cinemaToRemove = findCinemaIdByName(cinemaName);
+        return "Successfully remove " + cinemaRepository.deleteById(cinemaToRemove).orElseThrow().getName();
+    }
+
+
+    public String removeCinemaRoom(String cinemaRoomName, String cinemaName) {
+
+        var cinemaRoomToRemove = findCinemaRoomIdByName(cinemaRoomName,cinemaName);
+
+        return "Successfully remove " + cinemaRoomRepository.deleteById(cinemaRoomToRemove).orElseThrow().getName();
+     }
 
 
 
@@ -114,6 +143,44 @@ public class AdminService {
                         .map(City::getName)
                         .collect(Collectors.toList());
 
+    }
+
+    public Cinema getCinemaByName(String cinemaName){
+
+        return cinemaRepository.findByName(cinemaName).orElseThrow();
+    }
+
+    public List<String> getAllCinemasNames(){
+
+        return cinemaRepository
+                .findAll()
+                .stream()
+                .map(Cinema::getName)
+                .collect(Collectors.toList());
+    }
+
+
+    public List<String> getAllCinemaRoomsForOneCinema(int id){
+
+        return cinemaRoomRepository
+                .findAllCinemaRoomsByCinemaId(id)
+                .stream()
+                .map(CinemaRoom::getName)
+                .collect(Collectors.toList());
+
+    }
+
+    public CinemaRoom getCinemaRoomByName(String cinemaRoomName){
+
+        return cinemaRoomRepository
+                .findByName(cinemaRoomName)
+                .orElseThrow();
+    }
+
+    public String updateCinemaRoom(CinemaRoom cinemaRoom) {
+
+
+        return "New cinema room name is " + cinemaRoomRepository.update(cinemaRoom, cinemaRoom.getId()).orElseThrow().getName();
     }
 
 

@@ -6,6 +6,7 @@ import org.jdbi.v3.core.Jdbi;
 import pl.cinemaproject.persistence.model.City;
 import pl.cinemaproject.repository.exception.RepositoryException;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -165,7 +166,7 @@ public abstract class AbstractCrudRepository<T, ID> implements CrudRepository<T,
         return "( " + Arrays
                 .stream(entityType.getDeclaredFields())
                 .filter(field -> !field.getName().equalsIgnoreCase("id"))
-                .map(field -> CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, field.getName()))
+                .map(field -> getUnderscoreFieldName(field))
                 .collect(Collectors.joining(", ")) + ")";
     }
 
@@ -212,13 +213,18 @@ public abstract class AbstractCrudRepository<T, ID> implements CrudRepository<T,
                     try {
                         field.setAccessible(true);
                         if (field.getType().equals(String.class)) {
-                            return field.getName() + " = '" + field.get(item) + "'";
+                            return getUnderscoreFieldName(field) + " = '" + field.get(item) + "'";
                         }
-                        return field.getName() + " = " + field.get(item);
+                        return getUnderscoreFieldName(field) + " = " + field.get(item);
                     } catch (Exception e) {
                         throw new RepositoryException(e.getMessage());
                     }
                 }).collect(Collectors.joining(", "));
+    }
+
+    private String getUnderscoreFieldName(Field field) {
+
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, field.getName());
     }
 
 
