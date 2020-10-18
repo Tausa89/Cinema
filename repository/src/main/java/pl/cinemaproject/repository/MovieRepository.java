@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface MovieRepository extends CrudRepository<Movie, Integer> {
 
 
-    Optional<Movie> findByName(String movieName);
+    Optional<Movie> findByTitle(String title);
     Optional<Movie> findByDescription(String description);
     Optional<Movie> findByStartTime(LocalDate startTime);
 }
