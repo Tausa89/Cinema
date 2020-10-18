@@ -34,10 +34,10 @@ public class CinemaRoomRepositoryImpl extends AbstractCrudRepository<CinemaRoom,
 
         return jdbi.withHandle(handle -> handle
                 .createQuery(sql)
-                .bind("id", id))
+                .bind("id", id)
                 .mapToBean(CinemaRoom.class)
                 .stream()
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
     @Override

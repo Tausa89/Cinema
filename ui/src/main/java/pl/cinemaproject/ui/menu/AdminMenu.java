@@ -133,6 +133,8 @@ public class AdminMenu {
                 You can add cinema room only to existing cinema,
                 to which cinema you want to add new cinema room
                 """);
+        printAllCinemasNames();
+
         var cinemaId = adminService.findCinemaIdByName(AdminDataService.getString("Provide cinema name"));
         CinemaRoom newCinemaRoom = CinemaRoom
                 .builder()
@@ -182,7 +184,7 @@ public class AdminMenu {
     private void updateCity() {
 
 
-        adminService.getAllCitiesNames().forEach(System.out::println);
+        printAllCitiesNames();
         var cityToUpdate = AdminDataService.getString("Pleas provide name of existing city");
         var city = adminService.findCityIdByName(cityToUpdate);
         var updatedCity = City
@@ -199,7 +201,7 @@ public class AdminMenu {
 
 
     private void updateCinema() {
-        adminService.getAllCinemasNames().forEach(System.out::println);
+        printAllCinemasNames();
         var cinemaToUpdate = adminService.getCinemaByName(AdminDataService.getString("Provide name of existing cinema"));
 
         cinemaToUpdate.setName(AdminDataService.getString("Provide new cinema name"));
@@ -210,7 +212,7 @@ public class AdminMenu {
 
     private void updateCinemaRoom() {
 
-        adminService.getAllCinemasNames().forEach(System.out::println);
+        printAllCinemasNames();
         var cinemaId = adminService.getCinemaByName(AdminDataService.getString("For which cinema you want to update cinema room?")).getId();
         adminService.getAllCinemaRoomsForOneCinema(cinemaId).forEach(System.out::println);
         var cinemaRoomToUpdate = adminService.getCinemaRoomByName(AdminDataService.getString("Provide cinema room name"));
@@ -221,6 +223,8 @@ public class AdminMenu {
 
 
     }
+
+
 
     private void getRemoveDataMenu() {
 
@@ -255,7 +259,7 @@ public class AdminMenu {
 
     private void removeCity(){
 
-        adminService.getAllCitiesNames().forEach(System.out::println);
+        printAllCitiesNames();
         var cityToRemove = AdminDataService.getString("""
                 Before remove city you need to be aware 
                 that all connected data with this city like cinemas, cinema rooms etc
@@ -267,10 +271,14 @@ public class AdminMenu {
 
     }
 
+    private void printAllCitiesNames() {
+        adminService.getAllCitiesNames().forEach(System.out::println);
+    }
+
 
     private void removeCinema(){
 
-        adminService.getAllCinemasNames().forEach(System.out::println);
+        printAllCinemasNames();
         var cinemaToRemove = AdminDataService.getString("""
                 Before remove the cinema you need to be aware 
                 that all connected data like cinema rooms and seats
@@ -283,7 +291,7 @@ public class AdminMenu {
     }
 
     private void  removeCinemaRoom(){
-        adminService.getAllCinemasNames().forEach(System.out::println);
+        printAllCinemasNames();
         var cinemaName = AdminDataService.getString("""
                 Please provide the name of a cinema in 
                 which one you want to remove cinema room. 
@@ -334,6 +342,10 @@ public class AdminMenu {
 
         return AdminDataService.getInt("Chose option");
 
+    }
+
+    private void printAllCinemasNames() {
+        adminService.getAllCinemasNames().forEach(System.out::println);
     }
 
 }
