@@ -43,7 +43,15 @@ public class MovieRepositoryImpl extends AbstractCrudRepository<Movie,Integer> i
     }
 
     @Override
-    public Optional<Movie> findByStartTime(LocalDate startTime) {
-        return Optional.empty();
+    public List<Movie> findByStartTime(LocalDate startTime) {
+
+        var sql = "select * from movies where start_date = :startTime";
+        return jdbi.withHandle(handle ->
+                handle
+                        .createQuery(sql)
+                        .bind("startTime", startTime)
+                        .mapToBean(Movie.class)
+                        .stream()
+                        .collect(Collectors.toList()));
     }
 }
