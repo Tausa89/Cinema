@@ -6,7 +6,9 @@ import pl.cinemaproject.repository.generic.AbstractCrudRepository;
 import pl.cinemaproject.repository.generic.DatabaseConnector;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class MovieRepositoryImpl extends AbstractCrudRepository<Movie,Integer> implements MovieRepository {
 
@@ -27,8 +29,17 @@ public class MovieRepositoryImpl extends AbstractCrudRepository<Movie,Integer> i
     }
 
     @Override
-    public Optional<Movie> findByDescription(String description) {
-        return Optional.empty();
+    public List<Movie> findByDescription(String description) {
+
+        var sql = "select * from movies where description like :description";
+
+        return jdbi.withHandle(handle ->
+                handle
+                        .createQuery(sql)
+                        .bind("description", description)
+                        .mapToBean(Movie.class)
+                        .stream()
+                        .collect(Collectors.toList()));
     }
 
     @Override
