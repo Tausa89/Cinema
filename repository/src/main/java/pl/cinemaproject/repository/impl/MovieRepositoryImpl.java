@@ -5,6 +5,7 @@ import pl.cinemaproject.repository.MovieRepository;
 import pl.cinemaproject.repository.generic.AbstractCrudRepository;
 import pl.cinemaproject.repository.generic.DatabaseConnector;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +44,7 @@ public class MovieRepositoryImpl extends AbstractCrudRepository<Movie,Integer> i
     }
 
     @Override
-    public List<Movie> findByStartTime(LocalDate startTime) {
+    public List<Movie> findByStartTime(Date startTime) {
 
         var sql = "select * from movies where start_date = :startTime";
         return jdbi.withHandle(handle ->
