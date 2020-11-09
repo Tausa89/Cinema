@@ -1,16 +1,12 @@
 {
-  "cinemaName": "Multikino",
-  "cityName": "ZabrzeTest",
+  "cinemaName": "Multikino Warszawa",
+  "cityName": "Warszawa",
   "cinemaRooms": [
     {
       "name": "One",
-      "rows": 3,
-      "seats": 3
-    },
-    {
-      "name": "Two",
-      "rows": 2,
-      "seats": 2
+      "rows": 10,
+      "seats": 10
     }
+
   ]
 }

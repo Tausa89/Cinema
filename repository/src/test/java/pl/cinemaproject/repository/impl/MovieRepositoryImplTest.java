@@ -59,8 +59,7 @@ class MovieRepositoryImplTest {
         result.forEach(System.out::println);
 
         assertEquals(1,result.size());
-
-
+        
 
     }
 

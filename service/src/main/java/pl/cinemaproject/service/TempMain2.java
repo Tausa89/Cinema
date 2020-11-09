@@ -1,13 +1,10 @@
 package pl.cinemaproject.service;
 
-import pl.cinemaproject.persistence.converter.CinemaDTOJsonConverter;
-import pl.cinemaproject.persistence.modeldto.CinemaComplexDTO;
-import pl.cinemaproject.repository.CityRepository;
+import pl.cinemaproject.persistence.model.view.SeancesView;
 import pl.cinemaproject.repository.generic.DatabaseConnector;
-import pl.cinemaproject.repository.impl.CinemaRepositoryImpl;
-import pl.cinemaproject.repository.impl.CinemaRoomRepositoryImpl;
-import pl.cinemaproject.repository.impl.CityRepositoryImpl;
-import pl.cinemaproject.repository.impl.SeatRepositoryImpl;
+import pl.cinemaproject.repository.impl.*;
+
+import java.util.List;
 
 public class TempMain2 {
 
@@ -19,22 +16,52 @@ public class TempMain2 {
 
         var connection = new DatabaseConnector(URL, USERNAME, PASSWORD);
 
-        final String FILE_ONE = "cinema_data_file.json";
-
-        CinemaDTOJsonConverter cinemaDTOJsonConverter = new CinemaDTOJsonConverter(FILE_ONE);
-
-        CinemaComplexDTO cinemaComplexDTOS = cinemaDTOJsonConverter
-                .fromJson()
-                .orElseThrow();
-
-
+//        final String FILE_ONE = "cinema_data_file.json";
+//
+//        CinemaDTOJsonConverter cinemaDTOJsonConverter = new CinemaDTOJsonConverter(FILE_ONE);
+//
+//        CinemaComplexDTO cinemaComplexDTOS = cinemaDTOJsonConverter
+//                .fromJson()
+//                .orElseThrow();
+//
+//
         var cityRepo = new CityRepositoryImpl(connection);
         var cinemaRepo = new CinemaRepositoryImpl(connection);
         var cinemaRoomRepo = new CinemaRoomRepositoryImpl(connection);
         var seatRepo = new SeatRepositoryImpl(connection);
+        var viewRepo = new SeancesViewImpl(connection);
+        var userService = new UserService(viewRepo);
 
 
-        CinemaService cinemaService = new CinemaService(cityRepo,cinemaRepo,cinemaRoomRepo,seatRepo);
-        cinemaService.createNewCinemaComplex(cinemaComplexDTOS);
+        List<SeancesView> seancesList = List.of(
+                SeancesView.builder()
+                        .cityName("OneCity")
+                        .cinemaName("OneCinema")
+                        .cinemaRoomName("CinemaRoomOne")
+                        .movieTitle("RandomMovie")
+                        .dateAndTime("2020-12-01 21:00:00")
+                        .build(),
+                SeancesView.builder()
+                        .cityName("TwoCity")
+                        .cinemaName("TwoCinema")
+                        .cinemaRoomName("CinemaRoomTwo")
+                        .movieTitle("RareMovie")
+                        .dateAndTime("2020-10-02 19:30:00")
+                        .build(),
+                SeancesView.builder()
+                        .cityName("ThreeCity")
+                        .cinemaName("ThreeCinema")
+                        .cinemaRoomName("CinemaRoomThree")
+                        .movieTitle("EpicMovie")
+                        .dateAndTime("2020-12-20 15:00:00")
+                        .build());
+
+        var resoult = userService.convertSeancesToListOfString();
+
+        resoult.forEach(System.out::println);
+//
+//
+//        CinemaService cinemaService = new CinemaService(cityRepo,cinemaRepo,cinemaRoomRepo,seatRepo);
+//        cinemaService.createNewCinemaComplex(cinemaComplexDTOS);
     }
 }

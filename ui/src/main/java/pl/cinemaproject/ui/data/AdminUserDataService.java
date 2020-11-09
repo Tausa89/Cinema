@@ -4,10 +4,10 @@ import pl.cinemaproject.ui.exception.AdminDataException;
 
 import java.util.Scanner;
 
-public final class AdminDataService {
+public final class AdminUserDataService {
 
 
-    public AdminDataService() {
+    public AdminUserDataService() {
     }
 
     private static final Scanner scanner = new Scanner(System.in);
@@ -34,6 +34,23 @@ public final class AdminDataService {
 
         return scanner.nextLine();
     }
+
+
+    public static String getSearchCriteria(String message){
+
+        System.out.println(message);
+
+       var words = scanner.nextLine();
+
+        if(!words.matches("^(\\w+[,]+)*\\w+$")){
+
+            throw new AdminDataException("Wrong Input");
+        }
+
+        return words;
+    }
+
+
 
 
 

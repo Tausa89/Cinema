@@ -5,7 +5,7 @@ import pl.cinemaproject.persistence.model.Cinema;
 import pl.cinemaproject.persistence.model.CinemaRoom;
 import pl.cinemaproject.persistence.model.City;
 import pl.cinemaproject.service.AdminService;
-import pl.cinemaproject.ui.data.AdminDataService;
+import pl.cinemaproject.ui.data.AdminUserDataService;
 
 @RequiredArgsConstructor
 public class AdminMenu {
@@ -65,7 +65,7 @@ public class AdminMenu {
 
     private void addNewCity() {
 
-        var cityName = AdminDataService.getString("Pleas provide city name");
+        var cityName = AdminUserDataService.getString("Pleas provide city name");
         var addedCity = adminService.addNewCity(cityName);
         System.out.println(addedCity + " was successfully added to database");
     }
@@ -103,11 +103,11 @@ public class AdminMenu {
 
     private void addNewCinemaToExistingCity() {
 
-        var cityName = AdminDataService.getString("Pleas provide city name");
+        var cityName = AdminUserDataService.getString("Pleas provide city name");
         var cityId = adminService.findCityIdByName(cityName);
         var newCinema = Cinema
                 .builder()
-                .name(AdminDataService.getString("Provide cinema name"))
+                .name(AdminUserDataService.getString("Provide cinema name"))
                 .cityId(cityId)
                 .build();
 
@@ -124,7 +124,7 @@ public class AdminMenu {
                         4. Exit menu.
                         """);
 
-        return AdminDataService.getInt("Chose option");
+        return AdminUserDataService.getInt("Chose option");
     }
 
     private void addNewCinemaRoom() {
@@ -135,13 +135,13 @@ public class AdminMenu {
                 """);
         printAllCinemasNames();
 
-        var cinemaId = adminService.findCinemaIdByName(AdminDataService.getString("Provide cinema name"));
+        var cinemaId = adminService.findCinemaIdByName(AdminUserDataService.getString("Provide cinema name"));
         CinemaRoom newCinemaRoom = CinemaRoom
                 .builder()
                 .cinemaId(cinemaId)
-                .name(AdminDataService.getString("Provide cinema room name"))
-                .places(AdminDataService.getInt("Provide number of places"))
-                .rowsNumber(AdminDataService.getInt("Provide number of rows"))
+                .name(AdminUserDataService.getString("Provide cinema room name"))
+                .places(AdminUserDataService.getInt("Provide number of places"))
+                .rowsNumber(AdminUserDataService.getInt("Provide number of rows"))
                 .build();
 
         System.out.println("Cinema room " + adminService.addNewCinemaRoom(newCinemaRoom) + " was successfully added");
@@ -177,7 +177,7 @@ public class AdminMenu {
                         5. Return to previous menu;
                         """);
 
-        return AdminDataService.getInt("Chose option");
+        return AdminUserDataService.getInt("Chose option");
     }
 
 
@@ -185,11 +185,11 @@ public class AdminMenu {
 
 
         printAllCitiesNames();
-        var cityToUpdate = AdminDataService.getString("Pleas provide name of existing city");
+        var cityToUpdate = AdminUserDataService.getString("Pleas provide name of existing city");
         var city = adminService.findCityIdByName(cityToUpdate);
         var updatedCity = City
                 .builder()
-                .name(AdminDataService.getString("Provide new city name"))
+                .name(AdminUserDataService.getString("Provide new city name"))
                 .id(city)
                 .build();
 
@@ -202,9 +202,9 @@ public class AdminMenu {
 
     private void updateCinema() {
         printAllCinemasNames();
-        var cinemaToUpdate = adminService.getCinemaByName(AdminDataService.getString("Provide name of existing cinema"));
+        var cinemaToUpdate = adminService.getCinemaByName(AdminUserDataService.getString("Provide name of existing cinema"));
 
-        cinemaToUpdate.setName(AdminDataService.getString("Provide new cinema name"));
+        cinemaToUpdate.setName(AdminUserDataService.getString("Provide new cinema name"));
 
         System.out.println(adminService.updateCinema(cinemaToUpdate));
     }
@@ -213,11 +213,11 @@ public class AdminMenu {
     private void updateCinemaRoom() {
 
         printAllCinemasNames();
-        var cinemaId = adminService.getCinemaByName(AdminDataService.getString("For which cinema you want to update cinema room?")).getId();
+        var cinemaId = adminService.getCinemaByName(AdminUserDataService.getString("For which cinema you want to update cinema room?")).getId();
         adminService.getAllCinemaRoomsForOneCinema(cinemaId).forEach(System.out::println);
-        var cinemaRoomToUpdate = adminService.getCinemaRoomByName(AdminDataService.getString("Provide cinema room name"));
+        var cinemaRoomToUpdate = adminService.getCinemaRoomByName(AdminUserDataService.getString("Provide cinema room name"));
 
-        cinemaRoomToUpdate.setName(AdminDataService.getString("Provide new cinema room name"));
+        cinemaRoomToUpdate.setName(AdminUserDataService.getString("Provide new cinema room name"));
         System.out.println(adminService.updateCinemaRoom(cinemaRoomToUpdate));
 
 
@@ -254,13 +254,13 @@ public class AdminMenu {
                         4. Return to previous menu.
                         """);
 
-        return AdminDataService.getInt("Chose option");
+        return AdminUserDataService.getInt("Chose option");
     }
 
     private void removeCity(){
 
         printAllCitiesNames();
-        var cityToRemove = AdminDataService.getString("""
+        var cityToRemove = AdminUserDataService.getString("""
                 Before remove city you need to be aware 
                 that all connected data with this city like cinemas, cinema rooms etc
                 will also be deleted.
@@ -279,7 +279,7 @@ public class AdminMenu {
     private void removeCinema(){
 
         printAllCinemasNames();
-        var cinemaToRemove = AdminDataService.getString("""
+        var cinemaToRemove = AdminUserDataService.getString("""
                 Before remove the cinema you need to be aware 
                 that all connected data like cinema rooms and seats
                 will also be deleted.
@@ -292,7 +292,7 @@ public class AdminMenu {
 
     private void  removeCinemaRoom(){
         printAllCinemasNames();
-        var cinemaName = AdminDataService.getString("""
+        var cinemaName = AdminUserDataService.getString("""
                 Please provide the name of a cinema in 
                 which one you want to remove cinema room. 
                 """);
@@ -300,7 +300,7 @@ public class AdminMenu {
         var cinemaId = adminService.findCinemaIdByName(cinemaName);
         adminService.getAllCinemaRoomsForOneCinema(cinemaId).forEach(System.out::println);
 
-        var cinemaRoomToRemove = AdminDataService.getString("""
+        var cinemaRoomToRemove = AdminUserDataService.getString("""
                 Before remove the cinema room you need to be aware 
                 that all connected data like cinema seats
                 will also be deleted.
@@ -325,7 +325,7 @@ public class AdminMenu {
                         4. Return to previous menu
                         """);
 
-        return AdminDataService.getInt("Chose option");
+        return AdminUserDataService.getInt("Chose option");
     }
 
     private int adminMainMenu() {
@@ -340,7 +340,7 @@ public class AdminMenu {
                         """);
 
 
-        return AdminDataService.getInt("Chose option");
+        return AdminUserDataService.getInt("Chose option");
 
     }
 
