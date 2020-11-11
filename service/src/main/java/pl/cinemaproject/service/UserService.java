@@ -18,7 +18,7 @@ public class UserService {
 
     public List<SeancesView> getAllSeances() {
 
-        return cinemaCityRoomsViewRepository.findCitiesWithCinemasAndCinemaRooms();
+        return cinemaCityRoomsViewRepository.getAllSeancesWithAllDate();
     }
 
 

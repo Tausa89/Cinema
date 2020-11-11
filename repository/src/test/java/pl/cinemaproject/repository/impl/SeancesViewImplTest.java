@@ -24,7 +24,7 @@ class SeancesViewImplTest {
 
         //when
 
-        var result = repo.findCitiesWithCinemasAndCinemaRooms();
+        var result = repo.getAllSeancesWithAllDate();
 
         result.forEach(System.out::println);
 

@@ -8,5 +8,9 @@ import java.util.List;
 public interface SeancesViewRepository extends CrudRepository <SeancesView, Integer> {
 
 
-    List<SeancesView> findCitiesWithCinemasAndCinemaRooms();
+    List<SeancesView> getAllSeancesWithAllDate();
+
+    List<SeancesView> getAllSeancesForGivenCity(String cityName);
+
+    List<SeancesView> getAllSeancesForGivenCinema(String cinemaName);
 }
