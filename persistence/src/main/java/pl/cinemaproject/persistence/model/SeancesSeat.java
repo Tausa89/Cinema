@@ -10,7 +10,7 @@ import pl.cinemaproject.persistence.enums.Status;
 @NoArgsConstructor
 @Data
 @Builder
-public class SeatSeance {
+public class SeancesSeat {
 
     private Integer id;
     private Integer seatId;

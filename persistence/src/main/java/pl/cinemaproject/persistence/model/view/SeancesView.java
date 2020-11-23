@@ -17,6 +17,7 @@ public class SeancesView {
     private String cinemaRoomName;
     private String cinemaName;
     private String cityName;
+    private Integer id;
 
 
     @Override

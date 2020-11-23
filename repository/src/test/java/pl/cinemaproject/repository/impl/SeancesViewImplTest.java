@@ -34,4 +34,25 @@ class SeancesViewImplTest {
 
     }
 
+    @Test
+    void shouldReturnListForGivenCity(){
+
+        var result = repo.getAllSeancesForGivenCity("Wrocław");
+
+        result.forEach(System.out::println);
+
+        assertNotNull(result);
+
+    }
+
+    @Test
+    void  shouldReturnListForGivenCinema(){
+
+        var result = repo.getAllSeancesForGivenCinema("Multikino");
+
+        result.forEach(System.out::println);
+
+        assertNotNull(result);
+    }
+
 }

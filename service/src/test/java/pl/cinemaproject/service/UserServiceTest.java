@@ -77,6 +77,40 @@ class UserServiceTest {
 
     }
 
+
+    @Test
+    void shouldReturnSeancesWithNumbers(){
+
+        var list = List.of(
+                SeancesView.builder()
+                        .cityName("OneCity")
+                        .cinemaName("OneCinema")
+                        .cinemaRoomName("CinemaRoomOne")
+                        .movieTitle("RandomMovie")
+                        .dateAndTime("2020-12-01 21:00:00")
+                        .build(),
+                SeancesView.builder()
+                        .cityName("TwoCity")
+                        .cinemaName("TwoCinema")
+                        .cinemaRoomName("CinemaRoomTwo")
+                        .movieTitle("RareMovie")
+                        .dateAndTime("2020-10-02 19:30:00")
+                        .build(),
+                SeancesView.builder()
+                        .cityName("ThreeCity")
+                        .cinemaName("ThreeCinema")
+                        .cinemaRoomName("CinemaRoomThree")
+                        .movieTitle("EpicMovie")
+                        .dateAndTime("2020-12-20 15:00:00")
+                        .build());
+
+        var result = userService.prepareSeancesListWithNumbers(list);
+
+        System.out.println(result);
+
+
+    }
+
     //ToDo czemu nie działą
 //    @Test
 //    void shouldFindSameSymbols(){

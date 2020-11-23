@@ -1,20 +1,16 @@
 package pl.cinemaproject.service;
 
 import lombok.RequiredArgsConstructor;
+import pl.cinemaproject.persistence.enums.Status;
 import pl.cinemaproject.persistence.mapper.Mappers;
-import pl.cinemaproject.persistence.model.Cinema;
-import pl.cinemaproject.persistence.model.CinemaRoom;
-import pl.cinemaproject.persistence.model.City;
-import pl.cinemaproject.persistence.model.Seat;
+import pl.cinemaproject.persistence.model.*;
 import pl.cinemaproject.persistence.model.view.CinemaCityRoomsView;
 import pl.cinemaproject.persistence.modeldto.CinemaComplexDTO;
-import pl.cinemaproject.repository.CinemaRepository;
-import pl.cinemaproject.repository.CinemaRoomRepository;
-import pl.cinemaproject.repository.CityRepository;
-import pl.cinemaproject.repository.SeatRepository;
+import pl.cinemaproject.repository.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -26,7 +22,8 @@ public class CinemaService {
     private final CinemaRepository cinemaRepository;
     private final CinemaRoomRepository cinemaRoomRepository;
     private final SeatRepository seatRepository;
-
+    private final SeatSeanceRepository seatSeanceRepository;
+    private final SeanceRepository seanceRepository;
 
 
     public Long createNewCinemaComplex(CinemaComplexDTO cinemaComplexDTO) {
@@ -130,6 +127,47 @@ public class CinemaService {
 
         return addCity(cinemaView.getCity());
     }
+
+
+
+
+    public void printCinemaRoomView(int seanceId) {
+
+        var cinemaRoom = getCinemaRoomBySeanceId(seanceId);
+        var numberOfRows = cinemaRoom.getRowsNumber();
+        var numberOfSeatProRow = cinemaRoom.getPlaces();
+
+        for (int i = 1; i <= numberOfRows; i++) {
+            System.out.println("");
+            for (int j = 1; j <= numberOfSeatProRow; j++) {
+
+                var seat = seatRepository.findByRowNumberPlaceNumberAndCinemaRoomId(i, j, cinemaRoom.getId()).orElseThrow();
+                printPlaceDependsOnSeanceSeatStatus(checkIfSeatIsOpen(seanceId,seat.getId()));
+
+            }
+        }
+
+    }
+
+    private void printPlaceDependsOnSeanceSeatStatus(boolean seanceSeatStatus) {
+        if (seanceSeatStatus) {
+            System.out.print("[O] ");
+        } else
+            System.out.print("[C] ");
+    }
+
+    private CinemaRoom getCinemaRoomBySeanceId(Integer seanceId) {
+
+        return cinemaRoomRepository.findById(seanceRepository.findById(seanceId).orElseThrow().getCinemaRoomId()).orElseThrow();
+    }
+
+
+    private boolean checkIfSeatIsOpen(int seanceId, int seatId){
+
+        return seatSeanceRepository.findBySeanceIdAndSeatId(seanceId, seatId).isEmpty();
+    }
+
+
 
 
 

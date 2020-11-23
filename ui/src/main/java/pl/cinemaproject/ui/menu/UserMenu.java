@@ -22,6 +22,7 @@ public class UserMenu {
             switch (option){
 
                 case 1 -> getSeancesWithSpecifiedCriteria();
+                case 2 -> getReservationAndBuyTicketMenu();
 
 
                 default -> System.out.println("Wrong input");
@@ -76,5 +77,53 @@ public class UserMenu {
 
         return AdminUserDataService.getInt("Choose option");
     }
+
+    public void getReservationAndBuyTicketMenu(){
+
+        var option  = reservationAndBuyTicketMenu();
+
+        while (true){
+
+            switch (option){
+
+                case 1 -> {allSeancesMenu();
+                        return;
+                }
+
+                default -> System.out.println("Wrong input");
+
+
+            }
+        }
+
+    }
+
+    private void allSeancesMenu() {
+        var city = AdminUserDataService.getString("Pleas provide name of city to check available seances");
+
+        var seances = userService.getSeancesForSpecifiedCity(city);
+        userService.prepareSeancesListWithNumbers(seances).forEach(System.out::println);
+        var number = AdminUserDataService.getInt("Chose seance by choosing seance number");
+        var cinemaRoomId = seances.get(number - 1);
+
+        
+
+    }
+
+    private int reservationAndBuyTicketMenu(){
+
+        System.out.println("""
+                You need to chose a seance for which one you want to buy or reserve a ticket
+                1. If you want to get seances for specified city press 1.
+                2. If you want to get seances for specified cinema press 2.
+                3. If you want to get seances for specified movie press 3.
+                4. If you want to return to previous menu press 4.
+                """);
+
+        return AdminUserDataService.getInt("Chose option");
+    }
+
+
+
 
 }

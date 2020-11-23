@@ -22,6 +22,12 @@ public class UserService {
     }
 
 
+    public List<SeancesView> getSeancesForSpecifiedCity(String cityName){
+
+        return cinemaCityRoomsViewRepository.getAllSeancesForGivenCity(cityName);
+    }
+
+
     public List<String> convertSeancesToListOfString() {
 
         return getAllSeances()
@@ -70,4 +76,14 @@ public class UserService {
 
         return words.replace(",", " ");
     }
+
+    public List<String> prepareSeancesListWithNumbers(List<SeancesView> seances){
+
+
+        return seances.stream().map(s -> seances.indexOf(s) + 1 + " " + s.toString() + "\n").collect(Collectors.toList());
+
+    }
+
+
+
 }

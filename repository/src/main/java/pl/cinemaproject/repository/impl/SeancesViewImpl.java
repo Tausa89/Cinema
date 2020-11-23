@@ -11,7 +11,8 @@ public class SeancesViewImpl extends AbstractCrudRepository<SeancesView, Integer
         implements SeancesViewRepository {
 
     private final String SQL = """
-            Select m.title as movieTitle, s.start_date_time as dateAndTime, cr.name as cinemaRoomName, c.name as cinemaName, ci.name as cityName
+            Select m.title as movieTitle, s.start_date_time as dateAndTime, 
+            cr.name as cinemaRoomName, cr.id as id, c.name as cinemaName, ci.name as cityName
             from seances s
             join movies m on s.movie_id = m.id
             join cinema_rooms cr on s.cinema_room_id = cr.id

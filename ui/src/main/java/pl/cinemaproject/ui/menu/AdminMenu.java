@@ -146,6 +146,9 @@ public class AdminMenu {
 
         System.out.println("Cinema room " + adminService.addNewCinemaRoom(newCinemaRoom) + " was successfully added");
 
+
+
+
         //ToDo generate Seats
 
     }
