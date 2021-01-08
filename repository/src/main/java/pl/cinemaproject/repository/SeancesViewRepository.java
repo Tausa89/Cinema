@@ -13,4 +13,6 @@ public interface SeancesViewRepository extends CrudRepository <SeancesView, Inte
     List<SeancesView> getAllSeancesForGivenCity(String cityName);
 
     List<SeancesView> getAllSeancesForGivenCinema(String cinemaName);
+
+    List<SeancesView> getAllSeancesForGivenMovie(String movieName);
 }

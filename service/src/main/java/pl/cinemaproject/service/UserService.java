@@ -27,6 +27,17 @@ public class UserService {
         return cinemaCityRoomsViewRepository.getAllSeancesForGivenCity(cityName);
     }
 
+    public List<SeancesView> getSeancesForSpecifiedCinema(String cinemaName){
+
+        return cinemaCityRoomsViewRepository.getAllSeancesForGivenCinema(cinemaName);
+    }
+
+
+    public List<SeancesView> getSeancesForSpecifiedMovie(String movieName){
+
+        return cinemaCityRoomsViewRepository.getAllSeancesForGivenMovie(movieName);
+    }
+
 
     public List<String> convertSeancesToListOfString() {
 
@@ -83,6 +94,10 @@ public class UserService {
         return seances.stream().map(s -> seances.indexOf(s) + 1 + " " + s.toString() + "\n").collect(Collectors.toList());
 
     }
+
+
+
+
 
 
 

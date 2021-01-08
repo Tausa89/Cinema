@@ -10,7 +10,6 @@ import pl.cinemaproject.repository.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -129,8 +128,6 @@ public class CinemaService {
     }
 
 
-
-
     public void printCinemaRoomView(int seanceId) {
 
         var cinemaRoom = getCinemaRoomBySeanceId(seanceId);
@@ -141,11 +138,17 @@ public class CinemaService {
             System.out.println("");
             for (int j = 1; j <= numberOfSeatProRow; j++) {
 
-                var seat = seatRepository.findByRowNumberPlaceNumberAndCinemaRoomId(i, j, cinemaRoom.getId()).orElseThrow();
-                printPlaceDependsOnSeanceSeatStatus(checkIfSeatIsOpen(seanceId,seat.getId()));
+                var seat = getSeat(i, j, cinemaRoom.getId());
+                printPlaceDependsOnSeanceSeatStatus(checkIfSeatIsOpen(seanceId, seat.getId()));
 
             }
         }
+
+    }
+
+    private Seat getSeat(int rowNumber, int placeNumber, int cinemaRoomId) {
+
+        return seatRepository.findByRowNumberPlaceNumberAndCinemaRoomId(rowNumber, placeNumber, cinemaRoomId).orElseThrow();
 
     }
 
@@ -162,13 +165,192 @@ public class CinemaService {
     }
 
 
-    private boolean checkIfSeatIsOpen(int seanceId, int seatId){
+    private boolean checkIfSeatIsOpen(int seanceId, int seatId) {
 
         return seatSeanceRepository.findBySeanceIdAndSeatId(seanceId, seatId).isEmpty();
     }
 
 
+    public SeancesSeat reserveSeat(int seanceId, int rowNumber, int placeNumber) {
 
+
+        var cinemaRoomId = getCinemaRoomBySeanceId(seanceId).getId();
+        var seat = getSeat(rowNumber, placeNumber, cinemaRoomId);
+
+        if (checkIfSeatIsOpen(seanceId, seat.getId())) {
+            var seanceSeatId = seatSeanceRepository.add(SeancesSeat
+                    .builder()
+                    .seanceId(seanceId)
+                    .seatId(seat.getId())
+                    .status(Status.RESERVED)
+                    .build()).orElseThrow().getId();
+            return seatSeanceRepository.findById(seanceSeatId).orElseThrow();
+        } else
+            return null;
+
+
+    }
+
+
+    public SeancesSeat orderSeat(int seanceId, int rowNumber, int placeNumber) {
+
+
+        var cinemaRoomId = getCinemaRoomBySeanceId(seanceId).getId();
+        var seat = getSeat(rowNumber, placeNumber, cinemaRoomId);
+
+        if (checkIfSeatIsOpen(seanceId, seat.getId())) {
+            var seanceSeatId = seatSeanceRepository.add(SeancesSeat
+                    .builder()
+                    .seanceId(seanceId)
+                    .seatId(seat.getId())
+                    .status(Status.ORDERED)
+                    .build()).orElseThrow().getId();
+            return seatSeanceRepository.findById(seanceSeatId).orElseThrow();
+        } else
+            return null;
+    }
+
+
+//    private void checkNextSeatStatus(int rowNumber, int placeNumber, int seanceId){
+//
+//        var cinemaRoom = getCinemaRoomBySeanceId(seanceId);
+//
+//        if(placeNumber - 1 < 1){
+//
+//        }
+//        var leftSeatId = getSeat(rowNumber,placeNumber -1,cinemaRoom.getId()).getId();
+//        var rightSeatId = getSeat(rowNumber,placeNumber +1,cinemaRoom.getId()).getId();
+//        if(checkIfSeatIsOpen(seanceId,))
+//
+//    }
+
+    private boolean checkIfSeatExist(int rowNumber, int placeNumber, int cinemaRoomId) {
+
+
+        return seatRepository.findByRowNumberPlaceNumberAndCinemaRoomId(rowNumber, placeNumber, cinemaRoomId).isPresent();
+    }
+
+
+    private int checkWhichSeatExist(int rowNumber, int placeNumber, int cinemaRoomId) {
+
+        var rightSeat = checkIfSeatExist(rowNumber, placeNumber + 1, cinemaRoomId);
+        var leftSeat = checkIfSeatExist(rowNumber, placeNumber + -1, cinemaRoomId);
+
+        if (rightSeat && leftSeat) {
+            return 0;
+        } else if (!rightSeat && leftSeat) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
+
+    private void nieWiemCo(int result) {
+
+        switch (result) {
+            case 0 -> {
+
+            }
+        }
+
+    }
+
+
+//    public void checkIfNextSeatIsOpen(SeancesSeat seancesSeat){
+//        var seat = seatRepository.findById(seancesSeat.getSeatId()).orElseThrow();
+//        var rightSeatExist = checkIfSeatExist(seat.getRowAmount(),seat.getPlace() + 1, seat.getCinemaRoomId());
+//        var leftSeatExist = checkIfSeatExist(seat.getRowAmount(),seat.getPlace() - 1, seat.getCinemaRoomId());
+//
+//        var rightSeatId = seatRepository.findByRowNumberPlaceNumberAndCinemaRoomId(seat.getRowAmount(),
+//                seat.getPlace() + 1, seat.getCinemaRoomId()).orElseThrow();
+//        var leftSeatId = seatRepository.findByRowNumberPlaceNumberAndCinemaRoomId(seat.getRowAmount(),
+//                seat.getPlace() - 1, seat.getCinemaRoomId()).orElseThrow();
+//
+//        if(rightSeatExist && leftSeatExist){
+//
+//            var isRightSeatOpen = checkIfSeatIsOpen(seancesSeat.getSeanceId(), rightSeatId.getId());
+//            var isLeftSeatOpen = checkIfSeatIsOpen(seancesSeat.getSeanceId(), leftSeatId.getId());
+//            if(isRightSeatOpen && isLeftSeatOpen){
+//                System.out.println(rightSeatId + " and " + leftSeatId);
+//            }
+//            else if (!isRightSeatOpen && isLeftSeatOpen){
+//                System.out.println(leftSeatId);
+//            }
+//            else if (isRightSeatOpen){
+//                System.out.println(rightSeatId);
+//            }
+//
+//            else
+//                System.out.println("No more options");
+//        }
+//        else if (!rightSeatExist && leftSeatExist){
+//
+//
+//        }
+//        else {
+//
+//        }
+//
+//
+//    }
+
+
+    public void checkIfRightSeatIsFree(SeancesSeat seancesSeat) {
+
+        var seat = getSeatById(seancesSeat.getSeatId());
+        var seatNumber = seat.getPlace() + 1;
+        if (checkIfNextSeatExist(seat.getRowAmount(), seatNumber, seat.getCinemaRoomId())) {
+            var nextAvailableSeat = getSeat(seat.getRowAmount(), seatNumber,seat.getCinemaRoomId());
+            if (checkIfSeatIsOpen(seancesSeat.getSeanceId(), nextAvailableSeat.getId())) {
+                System.out.println("Next available seat for you is seat in row " + nextAvailableSeat.getRowAmount() +
+                        "seat number " + nextAvailableSeat.getPlace());
+            } else
+                System.out.println("No available seat");
+        } else
+            System.out.println("There is no more seats");
+
+
+    }
+
+    public void checkIfLeftSeatIsFree(SeancesSeat seancesSeat) {
+
+        var seat = getSeatById(seancesSeat.getSeatId());
+        var seatNumber = seat.getPlace() - 1;
+        if (checkIfNextSeatExist(seat.getRowAmount(), seatNumber, seat.getCinemaRoomId())) {
+            var nextAvailableSeat = getSeat(seat.getRowAmount(), seatNumber,seat.getCinemaRoomId());
+            if (checkIfSeatIsOpen(seancesSeat.getSeanceId(), nextAvailableSeat.getId())) {
+                System.out.println("Next available seat for you is seat in row " + nextAvailableSeat.getRowAmount() +
+                        "seat number " + nextAvailableSeat.getPlace());
+            } else
+                System.out.println("No available seat");
+        } else
+            System.out.println("There is no more seats");
+
+
+    }
+
+
+
+
+
+
+
+    private Seat getSeatById(Integer seatId) {
+        return seatRepository.findById(seatId).orElseThrow();
+    }
+
+    private boolean checkIfNextSeatExist(Integer rowNumber, Integer placeNumber, Integer cinemaRoomId) {
+
+        return seatRepository.findByRowNumberPlaceNumberAndCinemaRoomId(rowNumber, placeNumber, cinemaRoomId).isPresent();
+    }
+
+
+//    private boolean checkIfSeatsHaveThisSameId(SeancesSeat seancesSeat, Integer seanceId, Integer seatId){
+//
+//        var seanceSeat2 = seatSeanceRepository.findBySeanceIdAndSeatId(seanceId,seatId).orElseThrow();
+//
+//        return seancesSeat.getId() == seanceSeat2.getId();
+//    }
 
 
 }

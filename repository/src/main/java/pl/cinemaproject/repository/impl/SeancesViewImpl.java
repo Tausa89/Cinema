@@ -12,7 +12,7 @@ public class SeancesViewImpl extends AbstractCrudRepository<SeancesView, Integer
 
     private final String SQL = """
             Select m.title as movieTitle, s.start_date_time as dateAndTime, 
-            cr.name as cinemaRoomName, cr.id as id, c.name as cinemaName, ci.name as cityName
+            cr.name as cinemaRoomName, s.id as id, c.name as cinemaName, ci.name as cityName
             from seances s
             join movies m on s.movie_id = m.id
             join cinema_rooms cr on s.cinema_room_id = cr.id
@@ -61,6 +61,20 @@ public class SeancesViewImpl extends AbstractCrudRepository<SeancesView, Integer
                 handle
                         .createQuery(CINEMA_SQL)
                         .bind("cinema", cinemaName)
+                        .mapToBean(SeancesView.class)
+                        .list());
+    }
+
+
+    @Override
+    public List<SeancesView> getAllSeancesForGivenMovie(String movieName) {
+
+        final String MOVIE_SQL = SQL + " where m.title = :title";
+
+        return jdbi.withHandle(handle ->
+                handle
+                        .createQuery(MOVIE_SQL)
+                        .bind("title", movieName)
                         .mapToBean(SeancesView.class)
                         .list());
     }

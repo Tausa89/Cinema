@@ -42,12 +42,29 @@ public final class AdminUserDataService {
 
        var words = scanner.nextLine();
 
-        if(!words.matches("^(\\w+[,]+)*\\w+$")){
+       //ToDo Polskie znaki
+        if(!words.matches("^(\\w*[,]+)*\\w+$")){
 
             throw new AdminDataException("Wrong Input");
         }
 
         return words;
+    }
+
+
+    public static boolean getYesOrNo(){
+
+        System.out.println("Do you want to continue or not? If yes Press Y if not press N");
+        var yesOrNo = scanner.nextLine();
+        if(yesOrNo.toLowerCase().matches("y")){
+            return true;
+        }else if(yesOrNo.toLowerCase().matches("n")){
+            return false;
+        }else {
+            System.out.println("Wrong Input, use only Y or N");
+        }
+        return true;
+
     }
 
 

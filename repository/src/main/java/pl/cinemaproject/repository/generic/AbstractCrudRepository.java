@@ -3,6 +3,7 @@ package pl.cinemaproject.repository.generic;
 import com.google.common.base.CaseFormat;
 import org.atteo.evo.inflector.English;
 import org.jdbi.v3.core.Jdbi;
+import pl.cinemaproject.persistence.enums.Status;
 import pl.cinemaproject.persistence.model.City;
 import pl.cinemaproject.repository.exception.RepositoryException;
 
@@ -178,10 +179,14 @@ public abstract class AbstractCrudRepository<T, ID> implements CrudRepository<T,
                 .map(field -> {
                     try {
                         field.setAccessible(true);
-                        if (field.getType().equals(String.class) || field.getType().equals(LocalDate.class)) {
+                        if (field.getType().equals(String.class) || field.getType().equals(LocalDate.class) || field.getType().isEnum()) {
 
                             return "'" + field.get(item) + "'";
                         }
+//                        if(field.getType().isEnum()){
+//
+//                            return "'" + field.get(item) + "'";
+//                        }
                         return field.get(item).toString();
                     } catch (Exception e) {
                         throw new IllegalStateException(e.getMessage());
