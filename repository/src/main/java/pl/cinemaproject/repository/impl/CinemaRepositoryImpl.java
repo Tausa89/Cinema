@@ -29,4 +29,7 @@ public class CinemaRepositoryImpl extends AbstractCrudRepository<Cinema,Integer>
     }
 
 
+
+
+
 }

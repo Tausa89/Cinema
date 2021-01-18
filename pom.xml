@@ -34,6 +34,8 @@
         <guava.version>29.0-jre</guava.version>
         <junit.version>5.5.2</junit.version>
         <mockito.version>3.3.3</mockito.version>
+        <jbcrypt.version>0.3</jbcrypt.version>
+
 
         <maven.flatten.plugin.version>1.1.0</maven.flatten.plugin.version>
         <maven.enforcer.plugin.version>3.0.0-M3</maven.enforcer.plugin.version>
@@ -61,6 +63,11 @@
                 <artifactId>gson</artifactId>
                 <version>${gson.version}</version>
             </dependency>
+<!--            <dependency>-->
+<!--                <groupId>org.mindrot</groupId>-->
+<!--                <artifactId>jbcrypt</artifactId>-->
+<!--                <version>${jbcrypt.version}</version>-->
+<!--            </dependency>-->
             <dependency>
                 <groupId>org.jdbi</groupId>
                 <artifactId>jdbi3-core</artifactId>

@@ -41,6 +41,7 @@ public class UserMenu {
 
     private void getSeancesWithSpecifiedCriteria() {
 
+
         var searchCriteria = getSearchCriteriaAsString();
         var listOfCriteria = userService.prepareListOfSearchCriteria(searchCriteria);
 
@@ -113,11 +114,6 @@ public class UserMenu {
             }
         }
 
-//        1. If you want to chose from all available seances press 1.
-//        2. If you want to get seances for specified city press 2.
-//        3. If you want to get seances for specified cinema press 3.
-//        4. If you want to get seances for specified movie press 4.
-//        5. If you want to return to previous menu press 5.
 
     }
 

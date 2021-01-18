@@ -146,8 +146,6 @@ public class AdminService {
     }
 
 
-    //ToDo Zapytaj Krzyska czy tu powinnienem użyć strumini czy żeby zostawić zabawę
-    // bazie danych powinno już w sql pobierać tylko tabele z nazwami miast
     public List<String> getAllCitiesNames() {
 
         return
