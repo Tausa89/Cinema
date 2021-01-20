@@ -3,6 +3,7 @@ package pl.cinemaproject.ui.menu;
 import lombok.RequiredArgsConstructor;
 import pl.cinemaproject.persistence.enums.Status;
 import pl.cinemaproject.persistence.model.SeancesSeat;
+import pl.cinemaproject.persistence.model.Ticket;
 import pl.cinemaproject.persistence.model.view.SeancesView;
 import pl.cinemaproject.service.CinemaService;
 import pl.cinemaproject.service.UserService;
@@ -19,27 +20,27 @@ public class UserMenu {
     private final CinemaService cinemaService;
 
 
-    public void getUserMainMenu() {
+//    public void getUserMainMenu() {
+//
+//
+//        while (true) {
+//
+//            var option = userMainMenu();
+//            switch (option) {
+//
+//                case 1 -> getSeancesWithSpecifiedCriteria();
+//                case 2 -> getReservationAndBuyTicketMenu();
+//
+//
+//                default -> System.out.println("Wrong input");
+//
+//            }
+//        }
+//
+//    }
 
 
-        while (true) {
-
-            var option = userMainMenu();
-            switch (option) {
-
-                case 1 -> getSeancesWithSpecifiedCriteria();
-                case 2 -> getReservationAndBuyTicketMenu();
-
-
-                default -> System.out.println("Wrong input");
-
-            }
-        }
-
-    }
-
-
-    private void getSeancesWithSpecifiedCriteria() {
+    public void getSeancesWithSpecifiedCriteria() {
 
 
         var searchCriteria = getSearchCriteriaAsString();
@@ -66,25 +67,25 @@ public class UserMenu {
                 with comma from the last one for example:
                 London,Avengers         or 
                 London,21
-                You can provide city name, cinema name,
+                You can provide city name, ci4nema name,
                 movie name or start time of the movie.
                 """);
 
         return AdminUserDataService.getSearchCriteria("You can now provied criteria");
     }
 
-    private int userMainMenu() {
-
-        System.out.println("""
-                Welcome to User Menu.
-                                
-                1. Pres 1 if you want to find available seance by any category.
-                2. Pres 2 if you want buy or reserved a ticket.
-                3. Pres 3 to exit user menu.
-                """);
-
-        return AdminUserDataService.getInt("Choose option");
-    }
+//    private int userMainMenu() {
+//
+//        System.out.println("""
+//                Welcome to User Menu.
+//
+//                1. Pres 1 if you want to find available seance by any category.
+//                2. Pres 2 if you want buy or reserved a ticket.
+//                3. Pres 3 to exit user menu.
+//                """);
+//
+//        return AdminUserDataService.getInt("Choose option");
+//    }
 
     public void getReservationAndBuyTicketMenu() {
 
@@ -294,6 +295,9 @@ public class UserMenu {
                 counting from 1, pleas use only numbers
                 """);
     }
+
+
+
 
 
 }

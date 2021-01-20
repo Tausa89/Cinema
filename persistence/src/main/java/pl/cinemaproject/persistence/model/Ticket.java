@@ -18,6 +18,7 @@ public class Ticket {
     private Integer seanceId;
     private Integer seatId;
     private BigDecimal price;
+    private BigDecimal finalePrice;
     private int discount;
     private Integer userId;
 }
