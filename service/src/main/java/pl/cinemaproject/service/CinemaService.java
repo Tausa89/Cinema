@@ -171,44 +171,86 @@ public class CinemaService {
     }
 
 
-    public SeancesSeat reserveSeat(int seanceId, int rowNumber, int placeNumber) {
-
+//    public SeancesSeat reserveSeat(int seanceId, int rowNumber, int placeNumber) {
+//
+//
+//        var cinemaRoomId = getCinemaRoomBySeanceId(seanceId).getId();
+//        var seat = getSeat(rowNumber, placeNumber, cinemaRoomId);
+//
+//        if (checkIfSeatIsOpen(seanceId, seat.getId())) {
+//            var seanceSeatId = seatSeanceRepository.add(SeancesSeat
+//                    .builder()
+//                    .seanceId(seanceId)
+//                    .seatId(seat.getId())
+//                    .status(Status.RESERVED)
+//                    .build()).orElseThrow().getId();
+//            return seatSeanceRepository.findById(seanceSeatId).orElseThrow();
+//        } else
+//            return null;
+//
+//
+//    }
+    public SeancesSeat prepareSeatForReservation(int seanceId, int rowNumber, int placeNumber){
 
         var cinemaRoomId = getCinemaRoomBySeanceId(seanceId).getId();
         var seat = getSeat(rowNumber, placeNumber, cinemaRoomId);
 
-        if (checkIfSeatIsOpen(seanceId, seat.getId())) {
-            var seanceSeatId = seatSeanceRepository.add(SeancesSeat
+        if(checkIfSeatIsOpen(seanceId, seat.getId())) {
+
+            return SeancesSeat
                     .builder()
                     .seanceId(seanceId)
                     .seatId(seat.getId())
                     .status(Status.RESERVED)
-                    .build()).orElseThrow().getId();
-            return seatSeanceRepository.findById(seanceSeatId).orElseThrow();
-        } else
-            return null;
-
+                    .build();
+        }
+        return null;
 
     }
 
-
-    public SeancesSeat orderSeat(int seanceId, int rowNumber, int placeNumber) {
+    public SeancesSeat prepareSeatForOrder(int seanceId, int rowNumber, int placeNumber) {
 
 
         var cinemaRoomId = getCinemaRoomBySeanceId(seanceId).getId();
         var seat = getSeat(rowNumber, placeNumber, cinemaRoomId);
 
         if (checkIfSeatIsOpen(seanceId, seat.getId())) {
-            var seanceSeatId = seatSeanceRepository.add(SeancesSeat
+            return SeancesSeat
                     .builder()
                     .seanceId(seanceId)
                     .seatId(seat.getId())
                     .status(Status.ORDERED)
-                    .build()).orElseThrow().getId();
-            return seatSeanceRepository.findById(seanceSeatId).orElseThrow();
+                    .build();
         } else
             return null;
     }
+
+    public SeancesSeat addSeanceSeat(SeancesSeat seancesSeat){
+
+        var seanceSeatId = seatSeanceRepository.add(seancesSeat).orElseThrow().getId();
+        return seatSeanceRepository.findById(seanceSeatId).orElseThrow();
+    }
+
+
+
+
+//    public SeancesSeat orderSeat(int seanceId, int rowNumber, int placeNumber) {
+//
+//
+//        var cinemaRoomId = getCinemaRoomBySeanceId(seanceId).getId();
+//        var seat = getSeat(rowNumber, placeNumber, cinemaRoomId);
+//
+//        if (checkIfSeatIsOpen(seanceId, seat.getId())) {
+//            var seanceSeatId = seatSeanceRepository.add(SeancesSeat
+//                    .builder()
+//                    .seanceId(seanceId)
+//                    .seatId(seat.getId())
+//                    .status(Status.ORDERED)
+//                    .build()).orElseThrow().getId();
+//            return seatSeanceRepository.findById(seanceSeatId).orElseThrow();
+//        } else
+//            return null;
+//    }
 
 
 //    private void checkNextSeatStatus(int rowNumber, int placeNumber, int seanceId){

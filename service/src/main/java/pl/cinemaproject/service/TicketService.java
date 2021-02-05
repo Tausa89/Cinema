@@ -6,6 +6,7 @@ import pl.cinemaproject.persistence.enums.DiscountType;
 import pl.cinemaproject.persistence.model.SeancesSeat;
 import pl.cinemaproject.persistence.model.Ticket;
 import pl.cinemaproject.persistence.model.User;
+import pl.cinemaproject.repository.TicketRepository;
 
 
 import java.math.BigDecimal;
@@ -14,12 +15,13 @@ import java.math.BigDecimal;
 public class TicketService {
 
 
+    private final TicketRepository ticketRepository;
     private final DiscountService discountService;
     private final BigDecimal TICKET_PRICE = BigDecimal.valueOf(20);
 
-    public Ticket generateTicket(User user,SeancesSeat seancesSeat, DiscountType discountType){
+    public Ticket generateTicket(SeancesSeat seancesSeat, int discountType){
 
-        var discount = discountService.countDiscount(user,discountType);
+        var discount = discountService.getDiscount(discountType);
         var finalPrice = discountService.countFinalPrice(TICKET_PRICE.intValue(),discount);
         return Ticket
                 .builder()
@@ -28,8 +30,28 @@ public class TicketService {
                 .seanceId(seancesSeat.getSeanceId())
                 .seatId(seancesSeat.getSeatId())
                 .price(TICKET_PRICE)
-                .userId(user.getId())
                 .build();
+    }
+
+
+    public Ticket generateTicketForActiveUser(SeancesSeat seancesSeat, int discountType){
+
+        var discount = discountService.getDiscount(discountType) + 10;
+        var finalPrice = discountService.countFinalPrice(TICKET_PRICE.intValue(),discount);
+        return Ticket
+                .builder()
+                .discount(discount)
+                .finalePrice(BigDecimal.valueOf(finalPrice))
+                .seanceId(seancesSeat.getSeanceId())
+                .seatId(seancesSeat.getSeatId())
+                .price(TICKET_PRICE)
+                .build();
+    }
+
+
+    public String addTicket(Ticket ticket){
+
+        return ticketRepository.add(ticket).orElseThrow().toString();
     }
 
 }

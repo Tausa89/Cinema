@@ -9,6 +9,7 @@ import pl.cinemaproject.repository.UserRepository;
 import pl.cinemaproject.service.exception.AdminServiceException;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 public class UserMenuService {
@@ -77,14 +78,28 @@ public class UserMenuService {
     }
 
 
-    public User userLogin(@NonNull User user, @NonNull String password){
+//    public User userLogin(@NonNull User user, @NonNull String password){
+//
+//        if(checkUserAndPassword(user, password)){
+//
+//            return userRepository.findByUsername(user.getUsername()).orElseThrow();
+//        }
+//
+//        throw new AdminServiceException("No record of this user or password is wrong");
+//    }
+
+
+    public User userLogin(@NonNull String userName,@NonNull String password){
+
+        var user = findByUserName(userName);
 
         if(checkUserAndPassword(user, password)){
 
             return userRepository.findByUsername(user.getUsername()).orElseThrow();
         }
 
-        throw new AdminServiceException("No record of this user or password is wrong");
+        throw new AdminServiceException(userName + " dose not exist in data base or password is wrong");
+
     }
 
 

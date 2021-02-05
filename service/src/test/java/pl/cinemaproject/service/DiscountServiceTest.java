@@ -23,22 +23,17 @@ class DiscountServiceTest {
     void shouldReturnCorrectDiscount(){
 
 
-        User user = User
-                .builder()
-                .email("xxx")
-                .password("xxxx")
-                .username("Asd")
-                .name("ASDA")
-                .surname("ASDAA")
-                .build();
 
-        var discount = discountService.countDiscount(user, DiscountType.STUDENT);
-        var discountTwo = discountService.countDiscount(null, DiscountType.STUDENT);
-        var discountThree = discountService.countDiscount(user, DiscountType.CHILD);
 
-        assertEquals(20, discount);
-        assertEquals(10, discountTwo);
-        assertEquals(40, discountThree);
+        var discount = discountService.getDiscount(1);
+        var discountTwo = discountService.getDiscount(2);
+        var discountThree = discountService.getDiscount(3);
+
+
+        assertEquals(10, discount);
+        assertEquals(15, discountTwo);
+        assertEquals(20, discountThree);
+
     }
 
 

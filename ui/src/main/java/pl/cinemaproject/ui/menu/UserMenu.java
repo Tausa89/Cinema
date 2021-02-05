@@ -3,14 +3,16 @@ package pl.cinemaproject.ui.menu;
 import lombok.RequiredArgsConstructor;
 import pl.cinemaproject.persistence.enums.Status;
 import pl.cinemaproject.persistence.model.SeancesSeat;
-import pl.cinemaproject.persistence.model.Ticket;
 import pl.cinemaproject.persistence.model.view.SeancesView;
 import pl.cinemaproject.service.CinemaService;
+import pl.cinemaproject.service.ReservationService;
+import pl.cinemaproject.service.TicketService;
 import pl.cinemaproject.service.UserService;
 import pl.cinemaproject.ui.data.AdminUserDataService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class UserMenu {
@@ -18,41 +20,22 @@ public class UserMenu {
 
     private final UserService userService;
     private final CinemaService cinemaService;
-
-
-//    public void getUserMainMenu() {
-//
-//
-//        while (true) {
-//
-//            var option = userMainMenu();
-//            switch (option) {
-//
-//                case 1 -> getSeancesWithSpecifiedCriteria();
-//                case 2 -> getReservationAndBuyTicketMenu();
-//
-//
-//                default -> System.out.println("Wrong input");
-//
-//            }
-//        }
-//
-//    }
+    private final LoginMenu loginMenu;
+    private final TicketService ticketService;
+    private final DiscountMenu discountMenu;
+    private final ReservationService reservationService;
 
 
     public void getSeancesWithSpecifiedCriteria() {
 
 
-        var searchCriteria = getSearchCriteriaAsString();
-        var listOfCriteria = userService.prepareListOfSearchCriteria(searchCriteria);
-
+        var listOfCriteria = userService.prepareListOfSearchCriteria(getSearchCriteriaAsString());
         var matchingSeances = userService.findSameWords(listOfCriteria);
-
         if (matchingSeances.isEmpty()) {
             System.out.println("There is no match for given criteria");
-        } else
+        } else {
             matchingSeances.forEach(System.out::println);
-
+        }
 
     }
 
@@ -74,19 +57,6 @@ public class UserMenu {
         return AdminUserDataService.getSearchCriteria("You can now provied criteria");
     }
 
-//    private int userMainMenu() {
-//
-//        System.out.println("""
-//                Welcome to User Menu.
-//
-//                1. Pres 1 if you want to find available seance by any category.
-//                2. Pres 2 if you want buy or reserved a ticket.
-//                3. Pres 3 to exit user menu.
-//                """);
-//
-//        return AdminUserDataService.getInt("Choose option");
-//    }
-
     public void getReservationAndBuyTicketMenu() {
 
         var option = reservationAndBuyTicketMenu();
@@ -95,17 +65,13 @@ public class UserMenu {
 
             switch (option) {
 
-                case 1 -> buyOrReserveSeatFromAllSeances();
+                case 1 -> checkIfUserWantBuyOrReserveTicket(buyOrReserveSeatFromAllSeances());
 
+                case 2 -> checkIfUserWantBuyOrReserveTicket(buyOrReserveSeatForGivenCity());
 
-                case 2 -> buyOrReserveSeatForGivenCity();
+                case 3 -> checkIfUserWantBuyOrReserveTicket(buyOrReserveForGivenCinema());
 
-
-                case 3 -> buyOrReserveForGivenCinema();
-
-
-                case 4 -> buyOrReserveForGivenMovie();
-
+                case 4 -> checkIfUserWantBuyOrReserveTicket(buyOrReserveForGivenMovie());
 
                 case 5 -> getSeancesWithSpecifiedCriteria();
 
@@ -118,14 +84,47 @@ public class UserMenu {
 
     }
 
-    private void buyOrReserveForGivenMovie() {
+    private void checkIfUserWantBuyOrReserveTicket(List<SeancesSeat> seats) {
+        if (checkStatus(seats)) {
+            saveAndGenerateReservation(seats);
+        } else {
+            checkForActiveUser(seats);
+        }
+    }
+
+    private void checkForActiveUser(List<SeancesSeat> seats) {
+        if (checkIfUserHaveAccount()) {
+            saveAndGenerateTicketsForActiveUser(seats);
+        } else {
+            saveAndGenerateTicketForInactiveUser(seats);
+        }
+    }
+
+    private void saveAndGenerateTicketForInactiveUser(List<SeancesSeat> seats) {
+        seats.forEach(cinemaService::addSeanceSeat);
+        seats.stream().map(p -> generateTicketForUnActiveUser(p, discountMenu.discountMenu()))
+                .collect(Collectors.toList()).forEach(System.out::println);
+    }
+
+    private void saveAndGenerateTicketsForActiveUser(List<SeancesSeat> seats) {
+        seats.forEach(cinemaService::addSeanceSeat);
+        seats.stream().map(p -> generateTicketForActiveUser(p, discountMenu.discountMenu()))
+                .collect(Collectors.toList()).forEach(System.out::println);
+    }
+
+    private void saveAndGenerateReservation(List<SeancesSeat> seats) {
+        seats.forEach(cinemaService::addSeanceSeat);
+        seats.stream().map(this::generateReservation).collect(Collectors.toList()).forEach(System.out::println);
+    }
+
+    private List<SeancesSeat> buyOrReserveForGivenMovie() {
 
         var seanceId = getChosenSeanceIdForSpecifiedMovieName();
-        addNewSeanceSeat(seanceId);
+        return addNewSeanceSeat(seanceId);
 
     }
 
-    private void addNewSeanceSeat(Integer seanceId) {
+    private List<SeancesSeat> addNewSeanceSeat(Integer seanceId) {
         cinemaService.printCinemaRoomView(seanceId);
         List<SeancesSeat> reservedSeats = new ArrayList<>();
         reserveOrBuyFirstSeanceSeat(seanceId, reservedSeats);
@@ -134,36 +133,36 @@ public class UserMenu {
         }
 
         reservedSeats.forEach(System.out::println);
+        return reservedSeats;
     }
 
-    private void buyOrReserveForGivenCinema() {
+    private List<SeancesSeat> buyOrReserveForGivenCinema() {
         var seanceId = getChosenSeanceIdForSpecifiedCinemaName();
-        addNewSeanceSeat(seanceId);
+        return addNewSeanceSeat(seanceId);
 
     }
 
-    private void buyOrReserveSeatForGivenCity() {
+    private List<SeancesSeat> buyOrReserveSeatForGivenCity() {
         //ToDo musi reagowac jak nie znajdzie takiego miasta
         var seanceId = getChosenSeanceIdForSpecifiedCity();
-        addNewSeanceSeat(seanceId);
+        return addNewSeanceSeat(seanceId);
     }
 
 
-    private void buyOrReserveSeatFromAllSeances() {
+    private List<SeancesSeat> buyOrReserveSeatFromAllSeances() {
         var seanceId = getChosenSeanceIdFromAllSeances();
-        addNewSeanceSeat(seanceId);
+        return addNewSeanceSeat(seanceId);
 
     }
-
 
 
     private void reserveOrBuyFirstSeanceSeat(Integer seanceId, List<SeancesSeat> reservedSeats) {
         var buyOrReserve = getBuyOrReserveMenu();
         if (buyOrReserve == 1) {
-            orderSeatAndAddToSeatList(seanceId, reservedSeats);
+            addOrderedSeatToSeatList(seanceId, reservedSeats);
 
         } else if (buyOrReserve == 2) {
-            reserveSeatAndAddToSeatList(seanceId, reservedSeats);
+            addReservedSeatToSeatList(seanceId, reservedSeats);
         } else {
             System.out.println("Wrong input");
         }
@@ -176,27 +175,32 @@ public class UserMenu {
             cinemaService.checkIfLeftSeatIsFree(reservedSeats.get(reservedSeats.size() - 1));
             System.out.println("Which seat you want ?");
             if (reservedSeats.get(reservedSeats.size() - 1).getStatus() == Status.RESERVED) {
-                reserveSeatAndAddToSeatList(seanceId, reservedSeats);
+                addReservedSeatToSeatList(seanceId, reservedSeats);
             } else {
-                orderSeatAndAddToSeatList(seanceId, reservedSeats);
+                addOrderedSeatToSeatList(seanceId, reservedSeats);
             }
-            continueProcess = AdminUserDataService.getYesOrNo();
+            continueProcess = AdminUserDataService.getYesOrNo("Do you want to continue? If yes Press Y if not press N");
 
         }
     }
 
-    private void reserveSeatAndAddToSeatList(Integer seanceId, List<SeancesSeat> reservedSeats) {
-        reservedSeats.add(cinemaService.reserveSeat(seanceId,
+    private void addReservedSeatToSeatList(Integer seanceId, List<SeancesSeat> reservedSeats) {
+        getChoseSeatInformation();
+        reservedSeats.add(cinemaService.prepareSeatForReservation(seanceId,
                 getRowNumber(),
                 getPlaceNumber()));
     }
 
-    private void orderSeatAndAddToSeatList(Integer seanceId, List<SeancesSeat> reservedSeats) {
+
+    private void addOrderedSeatToSeatList(Integer seanceId, List<SeancesSeat> reservedSeats) {
         getChoseSeatInformation();
-        reservedSeats.add(cinemaService.orderSeat(seanceId,
+        reservedSeats.add(cinemaService.prepareSeatForOrder(seanceId,
                 getRowNumber(),
                 getPlaceNumber()));
     }
+
+
+
 
     private Integer getChosenSeanceIdFromAllSeances() {
 
@@ -204,7 +208,6 @@ public class UserMenu {
         return getSeanceId(seances);
 
     }
-
 
 
     private Integer getChosenSeanceIdForSpecifiedCity() {
@@ -237,7 +240,6 @@ public class UserMenu {
         var number = AdminUserDataService.getInt("Chose seance by choosing seance number");
         return seances.get(number - 1).getId();
     }
-
 
 
     private int getPlaceNumber() {
@@ -284,7 +286,6 @@ public class UserMenu {
     }
 
 
-
     private void getChoseSeatInformation() {
 
         System.out.println("""
@@ -296,8 +297,34 @@ public class UserMenu {
                 """);
     }
 
+    private boolean checkStatus(List<SeancesSeat> seats) {
+
+        return seats.get(0).getStatus() == Status.RESERVED;
+
+    }
+
+    //ToDo ogarnąć żeby wyświetlało to co trzeba w ToString
+    private String generateReservation(SeancesSeat seancesSeat) {
+
+        return reservationService.addReservation(reservationService.generateReservation(seancesSeat));
+
+    }
 
 
+    private boolean checkIfUserHaveAccount() {
+
+        return loginMenu.logIn();
+    }
+
+    private String generateTicketForActiveUser(SeancesSeat seancesSeat, int discount) {
+
+        return ticketService.addTicket(ticketService.generateTicketForActiveUser(seancesSeat, discount));
+    }
+
+    private String generateTicketForUnActiveUser(SeancesSeat seancesSeat, int discount) {
+
+        return ticketService.addTicket(ticketService.generateTicket(seancesSeat, discount));
+    }
 
 
 }

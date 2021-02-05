@@ -53,9 +53,9 @@ public final class AdminUserDataService {
     }
 
 
-    public static boolean getYesOrNo() {
+    public static boolean getYesOrNo(String msg) {
 
-        System.out.println("Do you want to continue or not? If yes Press Y if not press N");
+        System.out.println(msg);
         var yesOrNo = scanner.nextLine();
         if (yesOrNo.toLowerCase().matches("y")) {
             return true;

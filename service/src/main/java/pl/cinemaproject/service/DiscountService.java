@@ -9,7 +9,23 @@ public class DiscountService {
 
 
 
-    public Integer countDiscount(User user, DiscountType discountType){
+
+
+    public Integer getDiscount(int discountType){
+
+        int discount;
+
+        switch (discountType){
+
+            case 1 -> discount = 10;
+            case 2 -> discount = 15;
+            case 3 -> discount = 20;
+            default -> discount = 0;
+        }
+
+        return discount;
+    }
+    public Integer getDiscount(DiscountType discountType){
 
         int discount;
 
@@ -27,8 +43,7 @@ public class DiscountService {
 
         }
 
-        return discount + getDiscountForActiveUser(user);
-
+        return discount;
 
 
     }

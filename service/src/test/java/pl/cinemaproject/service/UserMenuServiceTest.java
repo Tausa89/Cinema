@@ -1,6 +1,8 @@
 package pl.cinemaproject.service;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import pl.cinemaproject.persistence.model.User;
 import pl.cinemaproject.repository.UserRepository;
 import pl.cinemaproject.repository.generic.DatabaseConnector;
 import pl.cinemaproject.repository.impl.UserRepositoryImpl;
@@ -28,6 +30,16 @@ class UserMenuServiceTest {
 //        System.out.println(hashedPassword);
 //
 //        assertNotNull(hashedPassword);
+//    }
+
+//    @Test
+//    void shouldReturnUser(){
+//
+//
+//        User user = userMenuService.userLogin("Zenek007", "Typ1234!");
+//
+//        assertNotNull(user);
+//
 //    }
 
 }
