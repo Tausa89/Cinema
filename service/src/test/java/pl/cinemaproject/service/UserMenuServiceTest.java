@@ -1,13 +1,8 @@
 package pl.cinemaproject.service;
 
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import pl.cinemaproject.persistence.model.User;
 import pl.cinemaproject.repository.UserRepository;
 import pl.cinemaproject.repository.generic.DatabaseConnector;
 import pl.cinemaproject.repository.impl.UserRepositoryImpl;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class UserMenuServiceTest {
 
@@ -20,7 +15,7 @@ class UserMenuServiceTest {
 
     DatabaseConnector connection = new DatabaseConnector(URL, USERNAME, PASSWORD);
     UserRepository userRepository = new UserRepositoryImpl(connection);
-    UserMenuService userMenuService = new UserMenuService(userRepository);
+    UserService userService = new UserService(userRepository);
 
 //    @Test
 //    void shouldHashPassword(){

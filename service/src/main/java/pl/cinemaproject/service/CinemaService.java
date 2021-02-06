@@ -1,5 +1,6 @@
 package pl.cinemaproject.service;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import pl.cinemaproject.persistence.enums.Status;
 import pl.cinemaproject.persistence.mapper.Mappers;
@@ -7,6 +8,7 @@ import pl.cinemaproject.persistence.model.*;
 import pl.cinemaproject.persistence.model.view.CinemaCityRoomsView;
 import pl.cinemaproject.persistence.modeldto.CinemaComplexDTO;
 import pl.cinemaproject.repository.*;
+import pl.cinemaproject.service.exception.ServiceException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,28 +54,28 @@ public class CinemaService {
 
     }
 
-    private Integer addCity(City city) {
+    private Integer addCity(@NonNull City city) {
 
         if (cityRepository.findByName(city.getName()).isPresent()) {
-            throw new NullPointerException("City with name " + city + " already exists");
+            throw new ServiceException("City with name " + city + " already exists");
         }
 
         return cityRepository
                 .add(city)
                 .map(City::getId)
-                .orElseThrow(() -> new IllegalStateException("....."));
+                .orElseThrow();
     }
 
-    private Integer addCinema(Cinema cinema) {
+    private Integer addCinema(@NonNull Cinema cinema) {
 
         if (cinemaRepository.findByName(cinema.getName()).isPresent()) {
-            throw new NullPointerException("Cinema with name " + cinema.getName() + " already exists");
+            throw new ServiceException("Cinema with name " + cinema.getName() + " already exists");
         }
 
         return cinemaRepository
                 .add(cinema)
                 .map(Cinema::getId)
-                .orElseThrow(() -> new IllegalStateException("....."));
+                .orElseThrow();
     }
 
     private List<CinemaRoom> addCinemaRooms(List<CinemaRoom> cinemaRooms) {
@@ -83,7 +85,7 @@ public class CinemaService {
     }
 
 
-    private List<Seat> generateSeats(List<CinemaRoom> cinemaRoomsWithIds) {
+    private List<Seat> generateSeats(@NonNull List<CinemaRoom> cinemaRoomsWithIds) {
 
         return cinemaRoomsWithIds
                 .stream()
@@ -102,7 +104,7 @@ public class CinemaService {
                 .collect(Collectors.toList());
     }
 
-    private Long addSeats(List<Seat> seats) {
+    private Long addSeats(@NonNull List<Seat> seats) {
 
         return seatRepository
                 .addAll(seats)
@@ -112,7 +114,7 @@ public class CinemaService {
     }
 
 
-    private List<CinemaRoom> getCinemaRoomsWithIds(List<CinemaRoom> cinemaRooms) {
+    private List<CinemaRoom> getCinemaRoomsWithIds(@NonNull List<CinemaRoom> cinemaRooms) {
 
         return addCinemaRooms(cinemaRooms);
     }
@@ -128,7 +130,7 @@ public class CinemaService {
     }
 
 
-    public void printCinemaRoomView(int seanceId) {
+    public void printCinemaRoomView(@NonNull Integer seanceId) {
 
         var cinemaRoom = getCinemaRoomBySeanceId(seanceId);
         var numberOfRows = cinemaRoom.getRowsNumber();
@@ -171,31 +173,12 @@ public class CinemaService {
     }
 
 
-//    public SeancesSeat reserveSeat(int seanceId, int rowNumber, int placeNumber) {
-//
-//
-//        var cinemaRoomId = getCinemaRoomBySeanceId(seanceId).getId();
-//        var seat = getSeat(rowNumber, placeNumber, cinemaRoomId);
-//
-//        if (checkIfSeatIsOpen(seanceId, seat.getId())) {
-//            var seanceSeatId = seatSeanceRepository.add(SeancesSeat
-//                    .builder()
-//                    .seanceId(seanceId)
-//                    .seatId(seat.getId())
-//                    .status(Status.RESERVED)
-//                    .build()).orElseThrow().getId();
-//            return seatSeanceRepository.findById(seanceSeatId).orElseThrow();
-//        } else
-//            return null;
-//
-//
-//    }
-    public SeancesSeat prepareSeatForReservation(int seanceId, int rowNumber, int placeNumber){
+    public SeancesSeat prepareSeatForReservation(int seanceId, int rowNumber, int placeNumber) {
 
         var cinemaRoomId = getCinemaRoomBySeanceId(seanceId).getId();
         var seat = getSeat(rowNumber, placeNumber, cinemaRoomId);
 
-        if(checkIfSeatIsOpen(seanceId, seat.getId())) {
+        if (checkIfSeatIsOpen(seanceId, seat.getId())) {
 
             return SeancesSeat
                     .builder()
@@ -225,46 +208,12 @@ public class CinemaService {
             return null;
     }
 
-    public SeancesSeat addSeanceSeat(SeancesSeat seancesSeat){
+    public SeancesSeat addSeanceSeat(@NonNull SeancesSeat seancesSeat) {
 
         var seanceSeatId = seatSeanceRepository.add(seancesSeat).orElseThrow().getId();
         return seatSeanceRepository.findById(seanceSeatId).orElseThrow();
     }
 
-
-
-
-//    public SeancesSeat orderSeat(int seanceId, int rowNumber, int placeNumber) {
-//
-//
-//        var cinemaRoomId = getCinemaRoomBySeanceId(seanceId).getId();
-//        var seat = getSeat(rowNumber, placeNumber, cinemaRoomId);
-//
-//        if (checkIfSeatIsOpen(seanceId, seat.getId())) {
-//            var seanceSeatId = seatSeanceRepository.add(SeancesSeat
-//                    .builder()
-//                    .seanceId(seanceId)
-//                    .seatId(seat.getId())
-//                    .status(Status.ORDERED)
-//                    .build()).orElseThrow().getId();
-//            return seatSeanceRepository.findById(seanceSeatId).orElseThrow();
-//        } else
-//            return null;
-//    }
-
-
-//    private void checkNextSeatStatus(int rowNumber, int placeNumber, int seanceId){
-//
-//        var cinemaRoom = getCinemaRoomBySeanceId(seanceId);
-//
-//        if(placeNumber - 1 < 1){
-//
-//        }
-//        var leftSeatId = getSeat(rowNumber,placeNumber -1,cinemaRoom.getId()).getId();
-//        var rightSeatId = getSeat(rowNumber,placeNumber +1,cinemaRoom.getId()).getId();
-//        if(checkIfSeatIsOpen(seanceId,))
-//
-//    }
 
     private boolean checkIfSeatExist(int rowNumber, int placeNumber, int cinemaRoomId) {
 
@@ -273,76 +222,13 @@ public class CinemaService {
     }
 
 
-    private int checkWhichSeatExist(int rowNumber, int placeNumber, int cinemaRoomId) {
-
-        var rightSeat = checkIfSeatExist(rowNumber, placeNumber + 1, cinemaRoomId);
-        var leftSeat = checkIfSeatExist(rowNumber, placeNumber + -1, cinemaRoomId);
-
-        if (rightSeat && leftSeat) {
-            return 0;
-        } else if (!rightSeat && leftSeat) {
-            return -1;
-        } else {
-            return 1;
-        }
-    }
-
-    private void nieWiemCo(int result) {
-
-        switch (result) {
-            case 0 -> {
-
-            }
-        }
-
-    }
-
-
-//    public void checkIfNextSeatIsOpen(SeancesSeat seancesSeat){
-//        var seat = seatRepository.findById(seancesSeat.getSeatId()).orElseThrow();
-//        var rightSeatExist = checkIfSeatExist(seat.getRowAmount(),seat.getPlace() + 1, seat.getCinemaRoomId());
-//        var leftSeatExist = checkIfSeatExist(seat.getRowAmount(),seat.getPlace() - 1, seat.getCinemaRoomId());
-//
-//        var rightSeatId = seatRepository.findByRowNumberPlaceNumberAndCinemaRoomId(seat.getRowAmount(),
-//                seat.getPlace() + 1, seat.getCinemaRoomId()).orElseThrow();
-//        var leftSeatId = seatRepository.findByRowNumberPlaceNumberAndCinemaRoomId(seat.getRowAmount(),
-//                seat.getPlace() - 1, seat.getCinemaRoomId()).orElseThrow();
-//
-//        if(rightSeatExist && leftSeatExist){
-//
-//            var isRightSeatOpen = checkIfSeatIsOpen(seancesSeat.getSeanceId(), rightSeatId.getId());
-//            var isLeftSeatOpen = checkIfSeatIsOpen(seancesSeat.getSeanceId(), leftSeatId.getId());
-//            if(isRightSeatOpen && isLeftSeatOpen){
-//                System.out.println(rightSeatId + " and " + leftSeatId);
-//            }
-//            else if (!isRightSeatOpen && isLeftSeatOpen){
-//                System.out.println(leftSeatId);
-//            }
-//            else if (isRightSeatOpen){
-//                System.out.println(rightSeatId);
-//            }
-//
-//            else
-//                System.out.println("No more options");
-//        }
-//        else if (!rightSeatExist && leftSeatExist){
-//
-//
-//        }
-//        else {
-//
-//        }
-//
-//
-//    }
-
 
     public void checkIfRightSeatIsFree(SeancesSeat seancesSeat) {
 
         var seat = getSeatById(seancesSeat.getSeatId());
         var seatNumber = seat.getPlace() + 1;
         if (checkIfNextSeatExist(seat.getRowAmount(), seatNumber, seat.getCinemaRoomId())) {
-            var nextAvailableSeat = getSeat(seat.getRowAmount(), seatNumber,seat.getCinemaRoomId());
+            var nextAvailableSeat = getSeat(seat.getRowAmount(), seatNumber, seat.getCinemaRoomId());
             if (checkIfSeatIsOpen(seancesSeat.getSeanceId(), nextAvailableSeat.getId())) {
                 System.out.println("Next available seat for you is seat in row " + nextAvailableSeat.getRowAmount() +
                         "seat number " + nextAvailableSeat.getPlace());
@@ -359,7 +245,7 @@ public class CinemaService {
         var seat = getSeatById(seancesSeat.getSeatId());
         var seatNumber = seat.getPlace() - 1;
         if (checkIfNextSeatExist(seat.getRowAmount(), seatNumber, seat.getCinemaRoomId())) {
-            var nextAvailableSeat = getSeat(seat.getRowAmount(), seatNumber,seat.getCinemaRoomId());
+            var nextAvailableSeat = getSeat(seat.getRowAmount(), seatNumber, seat.getCinemaRoomId());
             if (checkIfSeatIsOpen(seancesSeat.getSeanceId(), nextAvailableSeat.getId())) {
                 System.out.println("Next available seat for you is seat in row " + nextAvailableSeat.getRowAmount() +
                         "seat number " + nextAvailableSeat.getPlace());
@@ -372,11 +258,6 @@ public class CinemaService {
     }
 
 
-
-
-
-
-
     private Seat getSeatById(Integer seatId) {
         return seatRepository.findById(seatId).orElseThrow();
     }
@@ -387,12 +268,6 @@ public class CinemaService {
     }
 
 
-//    private boolean checkIfSeatsHaveThisSameId(SeancesSeat seancesSeat, Integer seanceId, Integer seatId){
-//
-//        var seanceSeat2 = seatSeanceRepository.findBySeanceIdAndSeatId(seanceId,seatId).orElseThrow();
-//
-//        return seancesSeat.getId() == seanceSeat2.getId();
-//    }
 
 
 }

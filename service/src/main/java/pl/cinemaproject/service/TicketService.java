@@ -1,6 +1,7 @@
 package pl.cinemaproject.service;
 
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import pl.cinemaproject.persistence.enums.DiscountType;
 import pl.cinemaproject.persistence.model.SeancesSeat;
@@ -19,7 +20,7 @@ public class TicketService {
     private final DiscountService discountService;
     private final BigDecimal TICKET_PRICE = BigDecimal.valueOf(20);
 
-    public Ticket generateTicket(SeancesSeat seancesSeat, int discountType){
+    public Ticket generateTicket(@NonNull SeancesSeat seancesSeat,@NonNull Integer discountType){
 
         var discount = discountService.getDiscount(discountType);
         var finalPrice = discountService.countFinalPrice(TICKET_PRICE.intValue(),discount);
@@ -34,7 +35,7 @@ public class TicketService {
     }
 
 
-    public Ticket generateTicketForActiveUser(SeancesSeat seancesSeat, int discountType){
+    public Ticket generateTicketForActiveUser(@NonNull SeancesSeat seancesSeat,@NonNull Integer discountType){
 
         var discount = discountService.getDiscount(discountType) + 10;
         var finalPrice = discountService.countFinalPrice(TICKET_PRICE.intValue(),discount);
@@ -49,7 +50,7 @@ public class TicketService {
     }
 
 
-    public String addTicket(Ticket ticket){
+    public String addTicket(@NonNull Ticket ticket){
 
         return ticketRepository.add(ticket).orElseThrow().toString();
     }

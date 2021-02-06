@@ -1,99 +1,103 @@
 package pl.cinemaproject.service;
 
+
+import com.google.common.hash.Hashing;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import pl.cinemaproject.persistence.model.view.SeancesView;
-import pl.cinemaproject.repository.SeancesViewRepository;
+import pl.cinemaproject.persistence.model.User;
+import pl.cinemaproject.repository.UserRepository;
+import pl.cinemaproject.service.exception.ServiceException;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.nio.charset.StandardCharsets;
 
 @RequiredArgsConstructor
 public class UserService {
 
 
-    private final SeancesViewRepository cinemaCityRoomsViewRepository;
+    private final UserRepository userRepository;
 
 
-    public List<SeancesView> getAllSeances() {
+    public String addNewUser(@NonNull User user) {
 
-        return cinemaCityRoomsViewRepository.getAllSeancesWithAllDate();
-    }
+        if (!checkIfUserExist(user)) {
+            throw new ServiceException("Username or email already exist");
 
+        }
 
-    public List<SeancesView> getSeancesForSpecifiedCity(String cityName){
-
-        return cinemaCityRoomsViewRepository.getAllSeancesForGivenCity(cityName);
-    }
-
-    public List<SeancesView> getSeancesForSpecifiedCinema(String cinemaName){
-
-        return cinemaCityRoomsViewRepository.getAllSeancesForGivenCinema(cinemaName);
-    }
-
-
-    public List<SeancesView> getSeancesForSpecifiedMovie(String movieName){
-
-        return cinemaCityRoomsViewRepository.getAllSeancesForGivenMovie(movieName);
-    }
-
-
-    public List<String> convertSeancesToListOfString() {
-
-        return getAllSeances()
-                .stream()
-                .map(SeancesView::toString)
-                .collect(Collectors.toList());
-    }
-
-
-    public List<String> findSameWords(@NonNull List<String> listOfWords) {
-
-
-        return
-                convertSeancesToListOfString()
-                        .stream()
-                        .filter(s -> findWord(s, listOfWords))
-                        .collect(Collectors.toList());
+        return userRepository.add(user).orElseThrow().getUsername();
 
 
     }
 
 
-    private boolean findWord(@NonNull String sentence, @NonNull List<String> listOfWords) {
+    private boolean checkIfUserExist(@NonNull User user) {
 
 
-        return listOfWords.stream().anyMatch(sentence::contains);
+        return userRepository.findByUsername(user.getUsername()).isEmpty() &&
+                userRepository.findByEmail(user.getEmail()).isEmpty();
+
+
+    }
+
+
+    public String deleteUser(@NonNull User user, @NonNull String password) {
+
+
+        if (checkUserAndPassword(user, password)) {
+
+            var userToRemove = userRepository.findByUsername(user.getUsername()).orElseThrow();
+            return userRepository.deleteById(userToRemove.getId()).orElseThrow().getUsername() + " has been removed";
+        }
+
+        throw new ServiceException("No record of this user or password is wrong");
 
 
     }
 
 
-    public List<String> prepareListOfSearchCriteria(@NonNull String words) {
+    private boolean checkUserAndPassword(User user, String password) {
 
-        return convertWordsToListOfWords(getWordsSeparateWithWhitespaces(words));
-
-
-    }
-
-    private List<String> convertWordsToListOfWords(@NonNull String words) {
-
-        return Arrays.asList(words.split(" "));
+        return userRepository.findByUsername(user.getUsername()).isPresent() && passwordHashing(password).equals(user.getPassword());
     }
 
 
-    private String getWordsSeparateWithWhitespaces(@NonNull String words) {
+    private String passwordHashing(String password){
 
-        return words.replace(",", " ");
+        return Hashing.sha256().hashString(password, StandardCharsets.UTF_8)
+                .toString();
     }
 
-    public List<String> prepareSeancesListWithNumbers(List<SeancesView> seances){
+    public User findByUserName(@NonNull String username){
+
+        if (userRepository.findByUsername(username).isEmpty()) {
+            throw new ServiceException(username + " dose not exist in data base");
+        }
+
+        return userRepository.findByUsername(username).orElseThrow();
+    }
 
 
-        return seances.stream().map(s -> seances.indexOf(s) + 1 + " " + s.toString() + "\n").collect(Collectors.toList());
+
+    public User userLogin(@NonNull String userName,@NonNull String password){
+
+        var user = findByUserName(userName);
+
+        if(checkUserAndPassword(user, password)){
+
+            return userRepository.findByUsername(user.getUsername()).orElseThrow();
+        }
+
+        throw new ServiceException(userName + " dose not exist in data base or password is wrong");
 
     }
+
+
+
+
+
+
+
+
 
 
 

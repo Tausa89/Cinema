@@ -30,7 +30,7 @@ public class TempMain2 {
         var cinemaRoomRepo = new CinemaRoomRepositoryImpl(connection);
         var seatRepo = new SeatRepositoryImpl(connection);
         var viewRepo = new SeancesViewImpl(connection);
-        var userService = new UserService(viewRepo);
+        var userService = new SeancesService(viewRepo);
 
 
         List<SeancesView> seancesList = List.of(

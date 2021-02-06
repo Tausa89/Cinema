@@ -2,25 +2,23 @@ package pl.cinemaproject.ui.menu;
 
 import lombok.RequiredArgsConstructor;
 import pl.cinemaproject.persistence.model.User;
-import pl.cinemaproject.service.UserMenuService;
+import pl.cinemaproject.service.UserService;
 import pl.cinemaproject.ui.data.AdminUserDataService;
 
 @RequiredArgsConstructor
 public class CreateUserMenu {
 
 
-    private final UserMenuService userMenuService;
+    private final UserService userService;
 
 
+    public void getUserAccountMenu() {
 
-
-    public void getUserAccountMenu(){
-
-        while (true){
+        while (true) {
 
             var option = userAccountMenu();
 
-            switch (option){
+            switch (option) {
 
                 case 1 -> addNewUser();
                 case 2 -> deleteUser();
@@ -35,16 +33,14 @@ public class CreateUserMenu {
         }
 
 
-
-
     }
 
 
-    private int userAccountMenu(){
+    private int userAccountMenu() {
 
         System.out.println("""
                 Welcome to account manager.
-                
+                                
                 1.If you want to create new account press 1.
                 2.If you want to delete account press 2.
                 3.If you want to change username press 3.
@@ -59,14 +55,7 @@ public class CreateUserMenu {
     }
 
 
-
-
-
-
-
-
-
-    private void addNewUser(){
+    private void addNewUser() {
 
         var newUser = User
                 .builder()
@@ -77,14 +66,14 @@ public class CreateUserMenu {
                 .email(AdminUserDataService.getEmailAddress("Pleas provide email"))
                 .build();
 
-        System.out.println(userMenuService.addNewUser(newUser) + " was successful created");
+        System.out.println(userService.addNewUser(newUser) + " was successful created");
 
     }
 
 
-    private void deleteUser(){
-        var user = userMenuService.findByUserName(AdminUserDataService.getString("Pleas provied username"));
-        System.out.println(userMenuService.deleteUser(user, AdminUserDataService.getString("Pleas provied password")));
+    private void deleteUser() {
+        var user = userService.findByUserName(AdminUserDataService.getString("Pleas provied username"));
+        System.out.println(userService.deleteUser(user, AdminUserDataService.getString("Pleas provied password")));
 
     }
 

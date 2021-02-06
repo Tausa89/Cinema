@@ -1,33 +1,11 @@
 package pl.cinemaproject.ui.menu;
 
 import lombok.RequiredArgsConstructor;
-import pl.cinemaproject.persistence.enums.DiscountType;
 import pl.cinemaproject.service.DiscountService;
 import pl.cinemaproject.ui.data.AdminUserDataService;
 
 @RequiredArgsConstructor
 public class DiscountMenu {
-
-
-    private final DiscountService discountService;
-
-
-
-//    public DiscountType getDiscountMenu(){
-//
-//        var option = discountMenu();
-//        switch (option){
-//
-//            case 1 -> {return DiscountType.STUDENT;}
-//
-//            case 2 -> {return  DiscountType.CHILD;}
-//
-//            case 3 -> {return DiscountType.SENIOR;}
-//
-//            default -> {return DiscountType.NORMAL;}
-//        }
-//
-//    }
 
 
 

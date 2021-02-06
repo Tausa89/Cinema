@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class UserServiceTest {
+class SeancesServiceTest {
 
 
 
@@ -27,7 +27,7 @@ class UserServiceTest {
     private SeancesViewRepository cinemaCityRoomsViewRepository;
 
     @InjectMocks
-    private UserService userService;
+    private SeancesService seancesService;
 
 
 
@@ -41,7 +41,7 @@ class UserServiceTest {
 
 
         //when
-        Mockito.when(userService.getAllSeances()).thenReturn(List.of(
+        Mockito.when(seancesService.getAllSeances()).thenReturn(List.of(
                 SeancesView.builder()
                         .cityName("OneCity")
                         .cinemaName("OneCinema")
@@ -64,7 +64,7 @@ class UserServiceTest {
                         .dateAndTime("2020-12-20 15:00:00")
                         .build()));
 
-        var result = userService.convertSeancesToListOfString();
+        var result = seancesService.convertSeancesToListOfString();
 
 
 
@@ -104,7 +104,7 @@ class UserServiceTest {
                         .dateAndTime("2020-12-20 15:00:00")
                         .build());
 
-        var result = userService.prepareSeancesListWithNumbers(list);
+        var result = seancesService.prepareSeancesListWithNumbers(list);
 
         System.out.println(result);
 

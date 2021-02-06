@@ -1,5 +1,6 @@
 package pl.cinemaproject.service;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import pl.cinemaproject.persistence.model.Reservation;
 import pl.cinemaproject.persistence.model.SeancesSeat;
@@ -21,7 +22,7 @@ public class ReservationService {
 
 
 
-    public Reservation generateReservation(SeancesSeat seancesSeat){
+    public Reservation generateReservation(@NonNull SeancesSeat seancesSeat){
 
         return Reservation
                 .builder()
@@ -33,7 +34,7 @@ public class ReservationService {
     }
 
 
-    public String addReservation(Reservation reservation){
+    public String addReservation(@NonNull Reservation reservation){
 
 
         return reservationRepository.add(reservation).orElseThrow().toString();

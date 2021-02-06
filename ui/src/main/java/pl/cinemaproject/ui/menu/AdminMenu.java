@@ -148,9 +148,6 @@ public class AdminMenu {
 
 
 
-
-        //ToDo generate Seats
-
     }
 
     private void getUpdateDataMenu() {

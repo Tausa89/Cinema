@@ -9,7 +9,7 @@ import pl.cinemaproject.repository.CinemaRepository;
 import pl.cinemaproject.repository.CinemaRoomRepository;
 import pl.cinemaproject.repository.CityRepository;
 import pl.cinemaproject.repository.SeatRepository;
-import pl.cinemaproject.service.exception.AdminServiceException;
+import pl.cinemaproject.service.exception.ServiceException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +29,7 @@ public class AdminService {
 
 
         if (cityRepository.findByName(cityName).isPresent()) {
-            throw new AdminServiceException(cityName + " already exists in database");
+            throw new ServiceException(cityName + " already exists in database");
         }
 
         return cityRepository
@@ -46,7 +46,7 @@ public class AdminService {
     public int findCityIdByName(@NonNull String cityName) {
 
         if (cityRepository.findByName(cityName).isEmpty()) {
-            throw new AdminServiceException(cityName + " dose not exist in data base");
+            throw new ServiceException(cityName + " dose not exist in data base");
         }
 
         return cityRepository.findByName(cityName).map(City::getId).orElseThrow();
@@ -57,7 +57,7 @@ public class AdminService {
     public String addNewCinema(@NonNull Cinema cinema) {
 
         if (cinemaRepository.findByName(cinema.getName()).isPresent()) {
-            throw new AdminServiceException(cinema.getName() + " already exists in data base");
+            throw new ServiceException(cinema.getName() + " already exists in data base");
         }
 
         return cinemaRepository.add(cinema).orElseThrow().getName();
@@ -66,7 +66,7 @@ public class AdminService {
     public int findCinemaIdByName(@NonNull String cinemaName) {
 
         if (cinemaRepository.findByName(cinemaName).isEmpty()) {
-            throw new AdminServiceException(cinemaName + " dose not exist in data base");
+            throw new ServiceException(cinemaName + " dose not exist in data base");
         }
 
         return cinemaRepository.findByName(cinemaName).map(Cinema::getId).orElseThrow();
@@ -85,7 +85,7 @@ public class AdminService {
 
         if (cinemaRoomRepository.findCinemaRoomByNameWithCinemaId(cinemaRoom.getName(),
                 cinemaRoom.getCinemaId()).isPresent()) {
-            throw new AdminServiceException(cinemaRoom.getName() + " dose already exist");
+            throw new ServiceException(cinemaRoom.getName() + " dose already exist");
         }
 
         return cinemaRoomRepository.add(cinemaRoom).orElseThrow().getName();
@@ -95,7 +95,7 @@ public class AdminService {
     public String updateCity(@NonNull City city) {
 
         if(cityRepository.findByName(city.getName()).isEmpty()){
-         throw new AdminServiceException(city.getName() + "dose not exist in data base");
+         throw new ServiceException(city.getName() + "dose not exist in data base");
 
         }
         return cityRepository.update(city, city.getId()).orElseThrow().getName();
@@ -106,7 +106,7 @@ public class AdminService {
     public String updateCinema(@NonNull Cinema cinema) {
 
         if(cinemaRepository.findByName(cinema.getName()).isEmpty()){
-            throw new AdminServiceException(cinema.getName() + "dose not exist in data base");
+            throw new ServiceException(cinema.getName() + "dose not exist in data base");
 
         }
         return "New cinema name " + cinemaRepository.update(cinema, cinema.getId()).orElseThrow().getName();
@@ -117,7 +117,7 @@ public class AdminService {
     public String removeCity(@NonNull String cityName) {
 
         if (cityRepository.findByName(cityName).isEmpty()){
-            throw new AdminServiceException(cityName + "dose not exist in data base");
+            throw new ServiceException(cityName + "dose not exist in data base");
         }
         var cityToRemove = findCityIdByName(cityName);
         return "Successfully remove " + cityRepository.deleteById(cityToRemove).orElseThrow().getName();
@@ -127,7 +127,7 @@ public class AdminService {
     public String removeCinema(String cinemaName) {
 
         if (cinemaRepository.findByName(cinemaName).isEmpty()){
-            throw new AdminServiceException(cinemaName + "dose not exist in data base");
+            throw new ServiceException(cinemaName + "dose not exist in data base");
         }
         var cinemaToRemove = findCinemaIdByName(cinemaName);
         return "Successfully remove " + cinemaRepository.deleteById(cinemaToRemove).orElseThrow().getName();
@@ -137,7 +137,7 @@ public class AdminService {
     public String removeCinemaRoom(String cinemaRoomName, String cinemaName) {
 
         if (findCinemaRoomIdByName(cinemaRoomName,cinemaName) == 0){
-            throw new AdminServiceException(cinemaRoomName + "dose not exist in data base");
+            throw new ServiceException(cinemaRoomName + "dose not exist in data base");
         }
 
         var cinemaRoomToRemove = findCinemaRoomIdByName(cinemaRoomName, cinemaName);
@@ -193,7 +193,7 @@ public class AdminService {
 
         if (cinemaRoomRepository.findCinemaRoomByNameWithCinemaId(cinemaRoom.getName(),
                 cinemaRoom.getCinemaId()).isEmpty()){
-            throw new AdminServiceException(cinemaRoom.getName() + "dose not exist in data base");
+            throw new ServiceException(cinemaRoom.getName() + "dose not exist in data base");
         }
         return "New cinema room name is " + cinemaRoomRepository.update(cinemaRoom, cinemaRoom.getId()).orElseThrow().getName();
     }

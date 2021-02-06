@@ -7,7 +7,7 @@ import pl.cinemaproject.persistence.model.view.SeancesView;
 import pl.cinemaproject.service.CinemaService;
 import pl.cinemaproject.service.ReservationService;
 import pl.cinemaproject.service.TicketService;
-import pl.cinemaproject.service.UserService;
+import pl.cinemaproject.service.SeancesService;
 import pl.cinemaproject.ui.data.AdminUserDataService;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class UserMenu {
 
 
-    private final UserService userService;
+    private final SeancesService seancesService;
     private final CinemaService cinemaService;
     private final LoginMenu loginMenu;
     private final TicketService ticketService;
@@ -29,8 +29,8 @@ public class UserMenu {
     public void getSeancesWithSpecifiedCriteria() {
 
 
-        var listOfCriteria = userService.prepareListOfSearchCriteria(getSearchCriteriaAsString());
-        var matchingSeances = userService.findSameWords(listOfCriteria);
+        var listOfCriteria = seancesService.prepareListOfSearchCriteria(getSearchCriteriaAsString());
+        var matchingSeances = seancesService.findSameWords(listOfCriteria);
         if (matchingSeances.isEmpty()) {
             System.out.println("There is no match for given criteria");
         } else {
@@ -204,7 +204,7 @@ public class UserMenu {
 
     private Integer getChosenSeanceIdFromAllSeances() {
 
-        var seances = userService.getAllSeances();
+        var seances = seancesService.getAllSeances();
         return getSeanceId(seances);
 
     }
@@ -213,7 +213,7 @@ public class UserMenu {
     private Integer getChosenSeanceIdForSpecifiedCity() {
 
         var cityName = AdminUserDataService.getString("Pleas provide city name");
-        var seances = userService.getSeancesForSpecifiedCity(cityName);
+        var seances = seancesService.getSeancesForSpecifiedCity(cityName);
         return getSeanceId(seances);
 
     }
@@ -221,7 +221,7 @@ public class UserMenu {
     private Integer getChosenSeanceIdForSpecifiedCinemaName() {
 
         var cinemaName = AdminUserDataService.getString("Pleas provide cinema name");
-        var seances = userService.getSeancesForSpecifiedCinema(cinemaName);
+        var seances = seancesService.getSeancesForSpecifiedCinema(cinemaName);
         return getSeanceId(seances);
 
     }
@@ -230,13 +230,13 @@ public class UserMenu {
     private Integer getChosenSeanceIdForSpecifiedMovieName() {
 
         var movieName = AdminUserDataService.getString("Pleas provide movie name");
-        var seances = userService.getSeancesForSpecifiedMovie(movieName);
+        var seances = seancesService.getSeancesForSpecifiedMovie(movieName);
         return getSeanceId(seances);
 
     }
 
     private Integer getSeanceId(List<SeancesView> seances) {
-        userService.prepareSeancesListWithNumbers(seances).forEach(System.out::println);
+        seancesService.prepareSeancesListWithNumbers(seances).forEach(System.out::println);
         var number = AdminUserDataService.getInt("Chose seance by choosing seance number");
         return seances.get(number - 1).getId();
     }

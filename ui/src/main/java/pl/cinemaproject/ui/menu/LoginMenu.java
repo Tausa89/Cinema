@@ -1,14 +1,13 @@
 package pl.cinemaproject.ui.menu;
 
 import lombok.RequiredArgsConstructor;
-import pl.cinemaproject.persistence.model.User;
-import pl.cinemaproject.service.UserMenuService;
+import pl.cinemaproject.service.UserService;
 import pl.cinemaproject.ui.data.AdminUserDataService;
 
 @RequiredArgsConstructor
 public class LoginMenu {
 
-    private final UserMenuService userMenuService;
+    private final UserService userService;
 
 
 
@@ -22,7 +21,7 @@ public class LoginMenu {
 
         var option = AdminUserDataService.getInt("Chose option");
 
-        return (option == 1) && userMenuService.userLogin(AdminUserDataService.getString("Provide Name"),
+        return (option == 1) && userService.userLogin(AdminUserDataService.getString("Provide Name"),
                 AdminUserDataService.getString("Provide Password")) != null;
 
     }
