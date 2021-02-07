@@ -23,13 +23,13 @@ I'm creating it to learn new technologies, practice how to create a multimodule 
 
 
 ## Features
-Should be able to use all functions of fully functional software for cinema bot for user and administrator.
-All CRUD option for cinema, like adding or removing for the example cinema room. Adding a whole cinema complex from a file.
-Let user search a seance depends on the movie title, city name, date of seance or just specified words.
-Functionality for buying or booking a ticket.
-CRUD for a user account.
+The administrator is able to add the whole Cinema complex from a file, with the name of the city, cinema, all cinema rooms and seats
+An administrator is also able to use all CRUD functionality in case of a city, cinema or cinema room.
+User is able to search for seance depends on the city where he wants to watch it, cinema name, movie title, date of seance or just specified words.
+User has the ability to buy or book a ticket also creating a user account and manage it.
 
 To-do list:
 * Code still needs a lot of improvements.
+* Sending emial confirmation after buying or booking a ticket. 
 * Remove console UI and replacing it with REST API using Spark.
 
