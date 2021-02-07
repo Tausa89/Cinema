@@ -6,8 +6,8 @@ import pl.cinemaproject.persistence.model.SeancesSeat;
 import pl.cinemaproject.persistence.model.view.SeancesView;
 import pl.cinemaproject.service.CinemaService;
 import pl.cinemaproject.service.ReservationService;
-import pl.cinemaproject.service.TicketService;
 import pl.cinemaproject.service.SeancesService;
+import pl.cinemaproject.service.TicketService;
 import pl.cinemaproject.ui.data.AdminUserDataService;
 
 import java.util.ArrayList;
@@ -28,9 +28,11 @@ public class UserMenu {
 
     public void getSeancesWithSpecifiedCriteria() {
 
-
+        //merge this two to sth like getMatchingSeances(string searchCriteria) in seancesService
         var listOfCriteria = seancesService.prepareListOfSearchCriteria(getSearchCriteriaAsString());
+        //It doesn't tell what it's doing
         var matchingSeances = seancesService.findSameWords(listOfCriteria);
+
         if (matchingSeances.isEmpty()) {
             System.out.println("There is no match for given criteria");
         } else {
@@ -41,7 +43,6 @@ public class UserMenu {
 
 
     private String getSearchCriteriaAsString() {
-
 
         System.out.println("""
                 Please provide search criteria.
@@ -54,6 +55,7 @@ public class UserMenu {
                 movie name or start time of the movie.
                 """);
 
+        //AdminUserDataService? Standard user shouldn't use that?
         return AdminUserDataService.getSearchCriteria("You can now provied criteria");
     }
 
@@ -62,28 +64,20 @@ public class UserMenu {
         var option = reservationAndBuyTicketMenu();
 
         while (true) {
-
             switch (option) {
-
                 case 1 -> checkIfUserWantBuyOrReserveTicket(buyOrReserveSeatFromAllSeances());
-
                 case 2 -> checkIfUserWantBuyOrReserveTicket(buyOrReserveSeatForGivenCity());
-
                 case 3 -> checkIfUserWantBuyOrReserveTicket(buyOrReserveForGivenCinema());
-
                 case 4 -> checkIfUserWantBuyOrReserveTicket(buyOrReserveForGivenMovie());
-
                 case 5 -> getSeancesWithSpecifiedCriteria();
-
                 default -> System.out.println("Wrong input");
-
-
             }
         }
 
 
     }
 
+    //if function is named "check..." then it can't make any changes anywhere, it can only return bool/exception
     private void checkIfUserWantBuyOrReserveTicket(List<SeancesSeat> seats) {
         if (checkStatus(seats)) {
             saveAndGenerateReservation(seats);
@@ -92,6 +86,7 @@ public class UserMenu {
         }
     }
 
+    //same as above, remove editing logic or rename function to be more meaningful
     private void checkForActiveUser(List<SeancesSeat> seats) {
         if (checkIfUserHaveAccount()) {
             saveAndGenerateTicketsForActiveUser(seats);
@@ -121,13 +116,13 @@ public class UserMenu {
 
         var seanceId = getChosenSeanceIdForSpecifiedMovieName();
         return addNewSeanceSeat(seanceId);
-
     }
 
     private List<SeancesSeat> addNewSeanceSeat(Integer seanceId) {
         cinemaService.printCinemaRoomView(seanceId);
         List<SeancesSeat> reservedSeats = new ArrayList<>();
         reserveOrBuyFirstSeanceSeat(seanceId, reservedSeats);
+
         if (orderProcessContinueMenu() == 2) {
             addNextSeatToSeatsList(seanceId, reservedSeats);
         }
@@ -144,18 +139,18 @@ public class UserMenu {
 
     private List<SeancesSeat> buyOrReserveSeatForGivenCity() {
         //ToDo musi reagowac jak nie znajdzie takiego miasta
+        //then just add throwing custom exception - the worst thing can happen is error :D
         var seanceId = getChosenSeanceIdForSpecifiedCity();
         return addNewSeanceSeat(seanceId);
     }
 
-
+    //not single responsibility
     private List<SeancesSeat> buyOrReserveSeatFromAllSeances() {
         var seanceId = getChosenSeanceIdFromAllSeances();
         return addNewSeanceSeat(seanceId);
-
     }
 
-
+    //not single responsibility
     private void reserveOrBuyFirstSeanceSeat(Integer seanceId, List<SeancesSeat> reservedSeats) {
         var buyOrReserve = getBuyOrReserveMenu();
         if (buyOrReserve == 1) {
@@ -171,6 +166,8 @@ public class UserMenu {
     private void addNextSeatToSeatsList(Integer seanceId, List<SeancesSeat> reservedSeats) {
         var continueProcess = true;
         while (continueProcess) {
+            //what this checkFunctions are doing? they tells that they are checking, and they don't return anything,
+            //so they are changing sth, so they are wrongly named
             cinemaService.checkIfRightSeatIsFree(reservedSeats.get(reservedSeats.size() - 1));
             cinemaService.checkIfLeftSeatIsFree(reservedSeats.get(reservedSeats.size() - 1));
             System.out.println("Which seat you want ?");
@@ -199,16 +196,12 @@ public class UserMenu {
                 getPlaceNumber()));
     }
 
-
-
-
     private Integer getChosenSeanceIdFromAllSeances() {
 
         var seances = seancesService.getAllSeances();
         return getSeanceId(seances);
 
     }
-
 
     private Integer getChosenSeanceIdForSpecifiedCity() {
 
@@ -235,6 +228,8 @@ public class UserMenu {
 
     }
 
+
+    //getSeanceIdFromUser, getSeanceId sounds like simple Getter for seance object
     private Integer getSeanceId(List<SeancesView> seances) {
         seancesService.prepareSeancesListWithNumbers(seances).forEach(System.out::println);
         var number = AdminUserDataService.getInt("Chose seance by choosing seance number");
@@ -270,7 +265,7 @@ public class UserMenu {
                 4. If you want to get seances for specified movie press 4.
                 5. If you want to return to previous menu press 5.
                 """);
-
+        //Admin user? Sounds like it should be in sth like ConsoleUIHelper or sth like this
         return AdminUserDataService.getInt("Chose option");
     }
 
@@ -298,33 +293,25 @@ public class UserMenu {
     }
 
     private boolean checkStatus(List<SeancesSeat> seats) {
-
         return seats.get(0).getStatus() == Status.RESERVED;
-
     }
 
     //ToDo ogarnąć żeby wyświetlało to co trzeba w ToString
     private String generateReservation(SeancesSeat seancesSeat) {
-
         return reservationService.addReservation(reservationService.generateReservation(seancesSeat));
-
     }
 
 
     private boolean checkIfUserHaveAccount() {
-
         return loginMenu.logIn();
     }
 
+    //generate sounds like it should return ticket, it should be named like "addTicket..."
     private String generateTicketForActiveUser(SeancesSeat seancesSeat, int discount) {
-
         return ticketService.addTicket(ticketService.generateTicketForActiveUser(seancesSeat, discount));
     }
 
     private String generateTicketForUnActiveUser(SeancesSeat seancesSeat, int discount) {
-
         return ticketService.addTicket(ticketService.generateTicket(seancesSeat, discount));
     }
-
-
 }

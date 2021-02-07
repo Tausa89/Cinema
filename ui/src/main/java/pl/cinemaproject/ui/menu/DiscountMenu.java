@@ -1,15 +1,10 @@
 package pl.cinemaproject.ui.menu;
 
 import lombok.RequiredArgsConstructor;
-import pl.cinemaproject.service.DiscountService;
 import pl.cinemaproject.ui.data.AdminUserDataService;
 
 @RequiredArgsConstructor
 public class DiscountMenu {
-
-
-
-
     public int discountMenu(){
 
         System.out.println("""
@@ -23,8 +18,6 @@ public class DiscountMenu {
                 enabling to get specified discount  
                 """);
 
-
         return AdminUserDataService.getInt("Chose option");
-
     }
 }

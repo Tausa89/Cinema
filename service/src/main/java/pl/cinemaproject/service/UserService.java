@@ -12,63 +12,39 @@ import java.nio.charset.StandardCharsets;
 
 @RequiredArgsConstructor
 public class UserService {
-
-
     private final UserRepository userRepository;
 
-
     public String addNewUser(@NonNull User user) {
-
         if (!checkIfUserExist(user)) {
             throw new ServiceException("Username or email already exist");
-
         }
 
         return userRepository.add(user).orElseThrow().getUsername();
-
-
     }
-
 
     private boolean checkIfUserExist(@NonNull User user) {
-
-
         return userRepository.findByUsername(user.getUsername()).isEmpty() &&
                 userRepository.findByEmail(user.getEmail()).isEmpty();
-
-
     }
 
-
     public String deleteUser(@NonNull User user, @NonNull String password) {
-
-
         if (checkUserAndPassword(user, password)) {
-
             var userToRemove = userRepository.findByUsername(user.getUsername()).orElseThrow();
             return userRepository.deleteById(userToRemove.getId()).orElseThrow().getUsername() + " has been removed";
         }
-
         throw new ServiceException("No record of this user or password is wrong");
-
-
     }
 
-
     private boolean checkUserAndPassword(User user, String password) {
-
         return userRepository.findByUsername(user.getUsername()).isPresent() && passwordHashing(password).equals(user.getPassword());
     }
 
-
     private String passwordHashing(String password){
-
         return Hashing.sha256().hashString(password, StandardCharsets.UTF_8)
                 .toString();
     }
 
     public User findByUserName(@NonNull String username){
-
         if (userRepository.findByUsername(username).isEmpty()) {
             throw new ServiceException(username + " dose not exist in data base");
         }
@@ -76,33 +52,13 @@ public class UserService {
         return userRepository.findByUsername(username).orElseThrow();
     }
 
-
-
     public User userLogin(@NonNull String userName,@NonNull String password){
-
         var user = findByUserName(userName);
 
         if(checkUserAndPassword(user, password)){
-
             return userRepository.findByUsername(user.getUsername()).orElseThrow();
         }
 
         throw new ServiceException(userName + " dose not exist in data base or password is wrong");
-
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
