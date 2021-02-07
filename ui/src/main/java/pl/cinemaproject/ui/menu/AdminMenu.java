@@ -9,15 +9,12 @@ import pl.cinemaproject.ui.data.AdminUserDataService;
 
 @RequiredArgsConstructor
 public class AdminMenu {
-
-
     private final AdminService adminService;
 
     public void getAdminMainMenu() {
 
         while (true) {
             try {
-
                 var option = adminMainMenu();
                 switch (option) {
                     case 1 -> getAddNewDataMenu();
@@ -64,17 +61,14 @@ public class AdminMenu {
     }
 
     private void addNewCity() {
-
-        var cityName = AdminUserDataService.getString("Pleas provide city name");
+        var cityName = AdminUserDataService.getString("Please provide city name");
         var addedCity = adminService.addNewCity(cityName);
         System.out.println(addedCity + " was successfully added to database");
     }
 
     private void getAddNewCinemaMenu() {
-
         while (true) {
             try {
-
                 var option = addNewCinemaMenu();
                 switch (option) {
                     case 1 -> addNewCinemaToExistingCity();
@@ -94,7 +88,6 @@ public class AdminMenu {
     }
 
     private void addNewCinemaWithNewCity() {
-
         System.out.println("You need to add city first");
         addNewCity();
         System.out.println("Repeat city name to which one you want add cinema");
@@ -102,8 +95,7 @@ public class AdminMenu {
     }
 
     private void addNewCinemaToExistingCity() {
-
-        var cityName = AdminUserDataService.getString("Pleas provide city name");
+        var cityName = AdminUserDataService.getString("Please provide city name");
         var cityId = adminService.findCityIdByName(cityName);
         var newCinema = Cinema
                 .builder()
@@ -112,7 +104,6 @@ public class AdminMenu {
                 .build();
 
         System.out.println("Successfully added cinema " + adminService.addNewCinema(newCinema));
-
     }
 
     private int addNewCinemaMenu() {
@@ -128,7 +119,6 @@ public class AdminMenu {
     }
 
     private void addNewCinemaRoom() {
-
         System.out.println("""
                 You can add cinema room only to existing cinema,
                 to which cinema you want to add new cinema room
@@ -145,13 +135,9 @@ public class AdminMenu {
                 .build();
 
         System.out.println("Cinema room " + adminService.addNewCinemaRoom(newCinemaRoom) + " was successfully added");
-
-
-
     }
 
     private void getUpdateDataMenu() {
-
         while (true) {
             var option = updateDataMenu();
             switch (option) {
@@ -182,8 +168,6 @@ public class AdminMenu {
 
 
     private void updateCity() {
-
-
         printAllCitiesNames();
         var cityToUpdate = AdminUserDataService.getString("Pleas provide name of existing city");
         var city = adminService.findCityIdByName(cityToUpdate);
@@ -194,8 +178,6 @@ public class AdminMenu {
                 .build();
 
         System.out.println(adminService.updateCity(updatedCity));
-
-
     }
 
 
@@ -211,7 +193,6 @@ public class AdminMenu {
 
 
     private void updateCinemaRoom() {
-
         printAllCinemasNames();
         var cinemaId = adminService.getCinemaByName(AdminUserDataService.getString("For which cinema you want to update cinema room?")).getId();
         adminService.getAllCinemaRoomsForOneCinema(cinemaId).forEach(System.out::println);
@@ -219,16 +200,9 @@ public class AdminMenu {
 
         cinemaRoomToUpdate.setName(AdminUserDataService.getString("Provide new cinema room name"));
         System.out.println(adminService.updateCinemaRoom(cinemaRoomToUpdate));
-
-
-
     }
 
-
-
     private void getRemoveDataMenu() {
-
-
         while (true) {
             var option = removeDataMenu();
             switch (option) {
@@ -258,7 +232,6 @@ public class AdminMenu {
     }
 
     private void removeCity(){
-
         printAllCitiesNames();
         var cityToRemove = AdminUserDataService.getString("""
                 Before remove city you need to be aware 
@@ -268,7 +241,6 @@ public class AdminMenu {
                 Pleas provide name of city you want to remove. 
                 """);
         System.out.println(adminService.removeCity(cityToRemove));
-
     }
 
     private void printAllCitiesNames() {
@@ -309,14 +281,9 @@ public class AdminMenu {
                 """);
 
         System.out.println(adminService.removeCinemaRoom(cinemaRoomToRemove,cinemaName));
-
-
-
     }
 
-
     private int addNewDataMenu() {
-
         System.out.println(
                 """
                         1. Do you want add new City ?
@@ -329,7 +296,6 @@ public class AdminMenu {
     }
 
     private int adminMainMenu() {
-
         System.out.println(
                 """
                         Welcome to admin panel, what you want to do?
@@ -339,13 +305,10 @@ public class AdminMenu {
                         4. Close menu.
                         """);
 
-
         return AdminUserDataService.getInt("Chose option");
-
     }
 
     private void printAllCinemasNames() {
         adminService.getAllCinemasNames().forEach(System.out::println);
     }
-
 }
