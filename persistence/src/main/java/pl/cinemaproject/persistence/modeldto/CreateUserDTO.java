@@ -1,19 +1,19 @@
-package pl.cinemaproject.persistence.model;
+package pl.cinemaproject.persistence.modeldto;
 
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.cinemaproject.persistence.modeldto.UserResponseDTO;
+import pl.cinemaproject.persistence.model.User;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-public class User {
+public class CreateUserDTO {
 
-    private Integer id;
+
     private String name;
     private String surname;
     private String username;
@@ -22,12 +22,16 @@ public class User {
 
 
 
-    public UserResponseDTO toCreateUserResponseDTO(){
+    public User toUser(){
 
-        return UserResponseDTO
+        return User
                 .builder()
-                .id(id)
+                .name(name)
+                .surname(surname)
                 .username(username)
+                .password(password)
+                .email(email)
                 .build();
     }
+
 }

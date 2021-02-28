@@ -1,7 +1,7 @@
 package pl.cinemaproject.ui.menu;
 
 import lombok.RequiredArgsConstructor;
-import pl.cinemaproject.ui.data.AdminUserDataService;
+import pl.cinemaproject.ui.data.ConsoleUIUtility;
 
 @RequiredArgsConstructor
 public class MainMenu {
@@ -58,7 +58,7 @@ public class MainMenu {
                 """);
 
 
-        return AdminUserDataService.getInt("Chose option");
+        return ConsoleUIUtility.getInt("Chose option");
 
     }
 

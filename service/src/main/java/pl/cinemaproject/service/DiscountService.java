@@ -25,12 +25,6 @@ public class DiscountService {
 
 
 
-    public Integer countFinalPrice(@NonNull Integer price,@NonNull Integer discount){
 
-        var discountAmount = (price*discount)/100;
-
-        return price - discountAmount;
-
-    }
 
 }

@@ -23,7 +23,7 @@ public class TicketService {
     public Ticket generateTicket(@NonNull SeancesSeat seancesSeat,@NonNull Integer discountType){
 
         var discount = discountService.getDiscount(discountType);
-        var finalPrice = discountService.countFinalPrice(TICKET_PRICE.intValue(),discount);
+        var finalPrice = countFinalPrice(TICKET_PRICE.intValue(),discount);
         return Ticket
                 .builder()
                 .discount(discount)
@@ -38,7 +38,7 @@ public class TicketService {
     public Ticket generateTicketForActiveUser(@NonNull SeancesSeat seancesSeat,@NonNull Integer discountType){
 
         var discount = discountService.getDiscount(discountType) + 10;
-        var finalPrice = discountService.countFinalPrice(TICKET_PRICE.intValue(),discount);
+        var finalPrice = countFinalPrice(TICKET_PRICE.intValue(),discount);
         return Ticket
                 .builder()
                 .discount(discount)
@@ -53,6 +53,17 @@ public class TicketService {
     public String addTicket(@NonNull Ticket ticket){
 
         return ticketRepository.add(ticket).orElseThrow().toString();
+    }
+
+
+
+
+    private Integer countFinalPrice(@NonNull Integer price,@NonNull Integer discount){
+
+        var discountAmount = (price*discount)/100;
+
+        return price - discountAmount;
+
     }
 
 }

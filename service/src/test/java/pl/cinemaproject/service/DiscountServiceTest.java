@@ -37,16 +37,16 @@ class DiscountServiceTest {
     }
 
 
-    @Test
-    void shouldReturnFinalPrice(){
-
-        var finalPrice = discountService.countFinalPrice(20,30);
-        var finalPriceTwo = discountService.countFinalPrice(20,10);
-        var finalPriceThere = discountService.countFinalPrice(20,0);
-
-        assertEquals(14,finalPrice);
-        assertEquals(18,finalPriceTwo);
-        assertEquals(20,finalPriceThere);
-    }
+//    @Test
+//    void shouldReturnFinalPrice(){
+//
+//        var finalPrice = discountService.countFinalPrice(20,30);
+//        var finalPriceTwo = discountService.countFinalPrice(20,10);
+//        var finalPriceThere = discountService.countFinalPrice(20,0);
+//
+//        assertEquals(14,finalPrice);
+//        assertEquals(18,finalPriceTwo);
+//        assertEquals(20,finalPriceThere);
+//    }
 
 }

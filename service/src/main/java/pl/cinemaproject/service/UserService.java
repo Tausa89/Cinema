@@ -1,46 +1,55 @@
 package pl.cinemaproject.service;
 
 
-import com.google.common.hash.Hashing;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import pl.cinemaproject.persistence.model.User;
+import pl.cinemaproject.persistence.modeldto.CreateUserDTO;
+import pl.cinemaproject.persistence.modeldto.UserResponseDTO;
 import pl.cinemaproject.repository.UserRepository;
 import pl.cinemaproject.service.exception.ServiceException;
 
-import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @RequiredArgsConstructor
 public class UserService {
 
 
     private final UserRepository userRepository;
+    private final PasswordService passwordService;
 
 
-    public String addNewUser(@NonNull User user) {
+    public UserResponseDTO addNewUser(@NonNull CreateUserDTO createUserDTO) {
 
-        if (!checkIfUserExist(user)) {
-            throw new ServiceException("Username or email already exist");
+        if (!checkIfUserExist(createUserDTO)) {
+            throw new ServiceException("Username already exist");
 
         }
 
-        return userRepository.add(user).orElseThrow().getUsername();
+        if(passwordService.checkPassword(createUserDTO.getPassword())){
+
+            createUserDTO.setPassword(passwordService.passwordHashing(createUserDTO.getPassword()));
+        }
+
+        return userRepository
+                .add(createUserDTO.toUser())
+                .map(User::toCreateUserResponseDTO)
+                .orElseThrow(() -> new ServiceException("Cannot add user to database"));
 
 
     }
 
 
-    private boolean checkIfUserExist(@NonNull User user) {
+    private boolean checkIfUserExist(@NonNull CreateUserDTO createUserDTO) {
 
 
-        return userRepository.findByUsername(user.getUsername()).isEmpty() &&
-                userRepository.findByEmail(user.getEmail()).isEmpty();
+        return userRepository.findByUsername(createUserDTO.getUsername()).isEmpty();
 
 
     }
 
 
-    public String deleteUser(@NonNull User user, @NonNull String password) {
+    public UserResponseDTO deleteUser(@NonNull User user, @NonNull String password) {
 
 
         if (checkUserAndPassword(user, password)) {
@@ -57,15 +66,12 @@ public class UserService {
 
     private boolean checkUserAndPassword(User user, String password) {
 
-        return userRepository.findByUsername(user.getUsername()).isPresent() && passwordHashing(password).equals(user.getPassword());
+        return userRepository.findByUsername(user.getUsername()).isPresent() &&
+                passwordService.passwordHashing(password).equals(user.getPassword());
     }
 
 
-    private String passwordHashing(String password){
 
-        return Hashing.sha256().hashString(password, StandardCharsets.UTF_8)
-                .toString();
-    }
 
     public User findByUserName(@NonNull String username){
 
@@ -89,6 +95,13 @@ public class UserService {
 
         throw new ServiceException(userName + " dose not exist in data base or password is wrong");
 
+    }
+
+
+
+    public List<User> getAllUsers(){
+
+        return userRepository.findAll();
     }
 
 

@@ -8,7 +8,7 @@ import pl.cinemaproject.service.CinemaService;
 import pl.cinemaproject.service.ReservationService;
 import pl.cinemaproject.service.TicketService;
 import pl.cinemaproject.service.SeancesService;
-import pl.cinemaproject.ui.data.AdminUserDataService;
+import pl.cinemaproject.ui.data.ConsoleUIUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +29,9 @@ public class UserMenu {
     public void getSeancesWithSpecifiedCriteria() {
 
 
-        var listOfCriteria = seancesService.prepareListOfSearchCriteria(getSearchCriteriaAsString());
-        var matchingSeances = seancesService.findSameWords(listOfCriteria);
+
+        var matchingSeances = seancesService.getMatchingSeances(getSearchCriteriaAsString());
+
         if (matchingSeances.isEmpty()) {
             System.out.println("There is no match for given criteria");
         } else {
@@ -54,7 +55,7 @@ public class UserMenu {
                 movie name or start time of the movie.
                 """);
 
-        return AdminUserDataService.getSearchCriteria("You can now provied criteria");
+        return ConsoleUIUtility.getSearchCriteria("You can now provied criteria");
     }
 
     public void getReservationAndBuyTicketMenu() {
@@ -179,7 +180,7 @@ public class UserMenu {
             } else {
                 addOrderedSeatToSeatList(seanceId, reservedSeats);
             }
-            continueProcess = AdminUserDataService.getYesOrNo("Do you want to continue? If yes Press Y if not press N");
+            continueProcess = ConsoleUIUtility.getYesOrNo("Do you want to continue? If yes Press Y if not press N");
 
         }
     }
@@ -212,7 +213,7 @@ public class UserMenu {
 
     private Integer getChosenSeanceIdForSpecifiedCity() {
 
-        var cityName = AdminUserDataService.getString("Pleas provide city name");
+        var cityName = ConsoleUIUtility.getString("Pleas provide city name");
         var seances = seancesService.getSeancesForSpecifiedCity(cityName);
         return getSeanceId(seances);
 
@@ -220,7 +221,7 @@ public class UserMenu {
 
     private Integer getChosenSeanceIdForSpecifiedCinemaName() {
 
-        var cinemaName = AdminUserDataService.getString("Pleas provide cinema name");
+        var cinemaName = ConsoleUIUtility.getString("Pleas provide cinema name");
         var seances = seancesService.getSeancesForSpecifiedCinema(cinemaName);
         return getSeanceId(seances);
 
@@ -229,7 +230,7 @@ public class UserMenu {
 
     private Integer getChosenSeanceIdForSpecifiedMovieName() {
 
-        var movieName = AdminUserDataService.getString("Pleas provide movie name");
+        var movieName = ConsoleUIUtility.getString("Pleas provide movie name");
         var seances = seancesService.getSeancesForSpecifiedMovie(movieName);
         return getSeanceId(seances);
 
@@ -237,17 +238,17 @@ public class UserMenu {
 
     private Integer getSeanceId(List<SeancesView> seances) {
         seancesService.prepareSeancesListWithNumbers(seances).forEach(System.out::println);
-        var number = AdminUserDataService.getInt("Chose seance by choosing seance number");
+        var number = ConsoleUIUtility.getInt("Chose seance by choosing seance number");
         return seances.get(number - 1).getId();
     }
 
 
     private int getPlaceNumber() {
-        return AdminUserDataService.getInt("Provide place number");
+        return ConsoleUIUtility.getInt("Provide place number");
     }
 
     private int getRowNumber() {
-        return AdminUserDataService.getInt("Provide row number");
+        return ConsoleUIUtility.getInt("Provide row number");
     }
 
     private int orderProcessContinueMenu() {
@@ -257,7 +258,7 @@ public class UserMenu {
                 2. If you want to continue processing Your order please press 2. 
                 """);
 
-        return AdminUserDataService.getInt("Chose option");
+        return ConsoleUIUtility.getInt("Chose option");
     }
 
     private int reservationAndBuyTicketMenu() {
@@ -271,7 +272,7 @@ public class UserMenu {
                 5. If you want to return to previous menu press 5.
                 """);
 
-        return AdminUserDataService.getInt("Chose option");
+        return ConsoleUIUtility.getInt("Chose option");
     }
 
     private int getBuyOrReserveMenu() {
@@ -282,7 +283,7 @@ public class UserMenu {
                 2.If you want reserve a ticket pleas chose 2.
                 """);
 
-        return AdminUserDataService.getInt("Chose option");
+        return ConsoleUIUtility.getInt("Chose option");
     }
 
 

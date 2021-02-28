@@ -48,7 +48,13 @@ public class SeancesService {
     }
 
 
-    public List<String> findSameWords(@NonNull List<String> listOfWords) {
+
+    public List<String> getMatchingSeances(@NonNull String words){
+
+        return findSameWords(prepareListOfSearchCriteria(words));
+    }
+
+    private List<String> findSameWords(@NonNull List<String> listOfWords) {
 
 
         return
@@ -70,23 +76,25 @@ public class SeancesService {
     }
 
 
-    public List<String> prepareListOfSearchCriteria(@NonNull String words) {
 
-        return convertWordsToListOfWords(getWordsSeparateWithWhitespaces(words));
+
+    private List<String> prepareListOfSearchCriteria(@NonNull String words) {
+
+        return Arrays.asList((words.replace(",", " ")).split(" "));
 
 
     }
 
-    private List<String> convertWordsToListOfWords(@NonNull String words) {
+//    private List<String> convertWordsToListOfWords(@NonNull String words) {
+//
+//        return Arrays.asList(words.split(" "));
+//    }
 
-        return Arrays.asList(words.split(" "));
-    }
 
-
-    private String getWordsSeparateWithWhitespaces(@NonNull String words) {
-
-        return words.replace(",", " ");
-    }
+//    private String getWordsSeparateWithWhitespaces(@NonNull String words) {
+//
+//        return words.replace(",", " ");
+//    }
 
     public List<String> prepareSeancesListWithNumbers(List<SeancesView> seances){
 

@@ -1,8 +1,7 @@
 package pl.cinemaproject.ui.menu;
 
 import lombok.RequiredArgsConstructor;
-import pl.cinemaproject.service.DiscountService;
-import pl.cinemaproject.ui.data.AdminUserDataService;
+import pl.cinemaproject.ui.data.ConsoleUIUtility;
 
 @RequiredArgsConstructor
 public class DiscountMenu {
@@ -24,7 +23,7 @@ public class DiscountMenu {
                 """);
 
 
-        return AdminUserDataService.getInt("Chose option");
+        return ConsoleUIUtility.getInt("Chose option");
 
     }
 }

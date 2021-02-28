@@ -1,15 +1,15 @@
 package pl.cinemaproject.ui.data;
 
 import com.google.common.hash.Hashing;
-import pl.cinemaproject.ui.exception.AdminDataException;
+import pl.cinemaproject.ui.exception.ConsoleUIException;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
-public final class AdminUserDataService {
+public final class ConsoleUIUtility {
 
 
-    public AdminUserDataService() {
+    public ConsoleUIUtility() {
     }
 
     private static final Scanner scanner = new Scanner(System.in);
@@ -22,7 +22,7 @@ public final class AdminUserDataService {
         String value = scanner.nextLine();
 
         if (!value.matches("[0-9]*")) {
-            throw new AdminDataException("Wrong input");
+            throw new ConsoleUIException("Wrong input");
         }
 
         return Integer.parseInt(value);
@@ -46,7 +46,7 @@ public final class AdminUserDataService {
         //ToDo Polskie znaki
         if (!words.matches("^(\\w*[,]+)*\\w+$")) {
 
-            throw new AdminDataException("Wrong Input");
+            throw new ConsoleUIException("Wrong Input");
         }
 
         return words;
@@ -78,7 +78,7 @@ public final class AdminUserDataService {
 
         if (!email.matches(regex)) {
 
-            throw new AdminDataException("Email address is incorrect");
+            throw new ConsoleUIException("Email address is incorrect");
 
         }
 
@@ -103,15 +103,15 @@ public final class AdminUserDataService {
 
         var passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$";
 
-        var password = getString("Pleas provied your password");
+        var password = getString("Please provied your password");
         if (!password.matches(passwordRegex)){
-            throw new AdminDataException("Password is not strong enough remember about 5 rules");
+            throw new ConsoleUIException("Password is not strong enough remember about 5 rules");
 
         }
         var repeatedPassword = getString("Repeat your password");
 
         if(!password.equals(repeatedPassword)){
-            throw new AdminDataException("Passwords are not this same");
+            throw new ConsoleUIException("Passwords are not this same");
         }
 
         return passwordHashing(password);
