@@ -22,7 +22,7 @@ public class User {
 
 
 
-    public UserResponseDTO toCreateUserResponseDTO(){
+    public UserResponseDTO toUserResponseDTO(){
 
         return UserResponseDTO
                 .builder()
