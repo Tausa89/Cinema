@@ -30,7 +30,7 @@
         <jdbi.version>3.13.0</jdbi.version>
         <mysql.version>8.0.19</mysql.version>
         <evo.version>1.2.2</evo.version>
-        <guava.version>29.0-jre</guava.version>
+        <guava.version>32.0.0-jre</guava.version>
         <junit.version>5.5.2</junit.version>
         <mockito.version>3.3.3</mockito.version>
 
